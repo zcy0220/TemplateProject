@@ -1,3 +1,6 @@
 [submodule "Assets/GameFramework"]
 	path = Assets/GameFramework
 	url = https://github.com/zcy0220/GameFramework.git
+[submodule "Assets/BattleSystem"]
+	path = Assets/BattleSystem
+	url = https://github.com/zcy0220/BattleSystem.git
