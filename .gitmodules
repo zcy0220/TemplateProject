@@ -4,3 +4,6 @@
 [submodule "Assets/BattleSystem"]
 	path = Assets/BattleSystem
 	url = https://github.com/zcy0220/BattleSystem.git
+[submodule "FrameSyncServer"]
+	path = FrameSyncServer
+	url = https://github.com/zcy0220/FrameSyncServer.git
