@@ -3,8 +3,6 @@
  */
 
 using UnityEngine;
-using BattleSystem;
-using GameFramework.Utils;
 
 public class GameLauncher : MonoBehaviour
 {
