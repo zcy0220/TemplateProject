@@ -1,9 +1,12 @@
-[submodule "Assets/GameFramework"]
-	path = Assets/GameFramework
-	url = https://github.com/zcy0220/GameFramework.git
-[submodule "Assets/BattleSystem"]
-	path = Assets/BattleSystem
-	url = https://github.com/zcy0220/BattleSystem.git
 [submodule "FrameSyncServer"]
 	path = FrameSyncServer
 	url = https://github.com/zcy0220/FrameSyncServer.git
+[submodule "Assets/Scripts/Frameworks/GameBaseFramework"]
+	path = Assets/Scripts/Frameworks/GameBaseFramework
+	url = https://github.com/zcy0220/GameBaseFramework.git
+[submodule "Assets/Scripts/Frameworks/GameUnityFramework"]
+	path = Assets/Scripts/Frameworks/GameUnityFramework
+	url = https://github.com/zcy0220/GameUnityFramework.git
+[submodule "Assets/Scripts/Frameworks/GameBattleFramework"]
+	path = Assets/Scripts/Frameworks/GameBattleFramework
+	url = https://github.com/zcy0220/GameBattleFramework.git
