@@ -3,10 +3,24 @@
  */
 
 using UnityEngine;
+using GameUnityFramework;
+using GameUnityFramework.Resource;
 
 public class GameLauncher : MonoBehaviour
 {
-    void Start()
+    /// <summary>
+    /// 初始化配置模块
+    /// </summary>
+    private void Awake()
+    {
+        GameUnityFrameworkConfig.ResourcePathPrefix = "Assets/ArtPack/Pack";
+        GameUnityFrameworkConfig.Init();
+    }
+
+    /// <summary>
+    /// 开始游戏
+    /// </summary>
+    private void Start()
     {
         //var playerData = new PlayerData();
         //playerData.Id = 1;
@@ -19,6 +33,6 @@ public class GameLauncher : MonoBehaviour
         //var battle = new Battle();
         //battle.Start(param);
         //MonoUpdaterManager.Instance.AddFixedUpdateListener(battle.UpdateFrame);
-        Debug.Log("开始游戏");
+        UnityObjectManager.Instance.SyncGameObjectInstantiate("Assets/ArtPack/Pack/UI/Prefabs/UIMainRoot.prefab");
     }
 }

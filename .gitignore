@@ -17,3 +17,6 @@
 *.svd
 *.pdb
 *.mdb
+
+# Builds
+/[Bb]uilds/ 
