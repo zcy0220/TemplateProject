@@ -2,7 +2,7 @@
  * 玩家数据
  */
 
-namespace GameMain
+namespace GameMain.Datas
 {
     public class PlayerData
     {

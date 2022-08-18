@@ -2,7 +2,9 @@
  * 数据模块处理中心
  */
 
-namespace GameMain
+using GameMain.Datas;
+
+namespace GameMain.Modules
 {
     public class DataModuleManager
     {
@@ -11,6 +13,7 @@ namespace GameMain
         public PlayerData PlayerData { get; private set; }
         #endregion
 
+        #region 初始化
         /// <summary>
         /// 构造
         /// 绑定监听事件
@@ -36,5 +39,6 @@ namespace GameMain
         private void InitEvents()
         {
         }
+        #endregion
     }
 }

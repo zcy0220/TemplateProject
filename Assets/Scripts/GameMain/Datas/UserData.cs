@@ -2,7 +2,7 @@
  * 用户信息
  */
 
-namespace GameMain
+namespace GameMain.Datas
 {
     public class UserData
     {

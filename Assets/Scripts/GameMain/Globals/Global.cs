@@ -4,6 +4,7 @@
 
 using GameBaseFramework.Event;
 using GameUnityFramework.Resource;
+using GameMain.Modules;
 
 namespace GameMain
 {

@@ -6,17 +6,23 @@ using UnityEngine;
 using GameUnityFramework;
 using GameBaseFramework.Base;
 using GameBaseFramework.Event;
-using GameUnityFramework.Resource;
+using GameUnityFramework.Utils;
 
 namespace GameMain
 {
     public class GameLauncher : MonoBehaviour
     {
         /// <summary>
+        /// 固定帧的间隔时间（毫秒）
+        /// </summary>
+        private int _fixedDeltaTime;
+
+        /// <summary>
         /// 初始化
         /// </summary>
         private void Awake()
         {
+            _fixedDeltaTime = (int)(Time.fixedDeltaTime * 1000);
             DontDestroyOnLoad(gameObject);
         }
 
@@ -36,7 +42,23 @@ namespace GameMain
             //var battle = new Battle();
             //battle.Start(param);
             //MonoUpdaterManager.Instance.AddFixedUpdateListener(battle.UpdateFrame);
-            G.UnityObjectManager.AsyncGameObjectInstantiate("UI/Prefabs/UIMainRoot.prefab", (obj) => { });
+            //G.UnityObjectManager.AsyncGameObjectInstantiate("UI/Prefabs/UIMainRoot.prefab", (obj) => { });
+        }
+
+        /// <summary>
+        /// Update总入口
+        /// </summary>
+        private void Update()
+        {
+            MonoBehaviourUtils.Instance.Update(Time.deltaTime);
+        }
+
+        /// <summary>
+        /// FixedUpdate总入口
+        /// </summary>
+        private void FixedUpdate()
+        {
+            MonoBehaviourUtils.Instance.FixedUpdate(_fixedDeltaTime);
         }
     }
 }
