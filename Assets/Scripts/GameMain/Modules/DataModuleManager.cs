@@ -2,15 +2,17 @@
  * 数据模块处理中心
  */
 
-using GameMain.Datas;
+using GameBaseFramework.Base;
 
 namespace GameMain.Modules
 {
     public class DataModuleManager
     {
-        #region 数据模块
-        public UserData UserData { get; private set; }
-        public PlayerData PlayerData { get; private set; }
+        #region 数据
+        #endregion
+
+        #region 模块
+        private RedPointModule _redPointModule = new RedPointModule();
         #endregion
 
         #region 初始化
@@ -20,8 +22,16 @@ namespace GameMain.Modules
         /// </summary>
         public DataModuleManager()
         {
+            InitModules();
             InitDatas();
             InitEvents();
+        }
+
+        /// <summary>
+        /// 初始化模块
+        /// </summary>
+        private void InitModules()
+        {
         }
 
         /// <summary>
@@ -29,8 +39,6 @@ namespace GameMain.Modules
         /// </summary>
         private void InitDatas()
         {
-            UserData = new UserData();
-            PlayerData = new PlayerData();
         }
 
         /// <summary>
@@ -38,6 +46,17 @@ namespace GameMain.Modules
         /// </summary>
         private void InitEvents()
         {
+        }
+        #endregion
+        #region RedPointModule
+        public DataValue<int> GetRedPointNum(ERedPointModule eRedPointModule)
+        {
+            return _redPointModule.GetRedPointNum(eRedPointModule);
+        }
+
+        public void TestAddRedPointNum(ERedPointModule eRedPointModule)
+        {
+            _redPointModule.AddRedPointNum(eRedPointModule, 1);
         }
         #endregion
     }

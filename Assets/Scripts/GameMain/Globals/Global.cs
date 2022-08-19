@@ -5,6 +5,7 @@
 using GameBaseFramework.Event;
 using GameUnityFramework.Resource;
 using GameMain.Modules;
+using GameMain.Views.UI;
 
 namespace GameMain
 {
@@ -12,6 +13,10 @@ namespace GameMain
     {
         #region EventManager
         public static EventManager EventManager = new();
+        #endregion
+
+        #region UIManager
+        public static UIManager UIManager = new();
         #endregion
 
         #region DataModuleManager
