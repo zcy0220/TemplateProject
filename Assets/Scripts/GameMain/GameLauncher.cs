@@ -3,10 +3,7 @@
  */
 
 using UnityEngine;
-using GameUnityFramework;
-using GameBaseFramework.Base;
-using GameBaseFramework.Event;
-using GameUnityFramework.Utils;
+using GameUnityFramework.Resource;
 
 namespace GameMain
 {
@@ -31,18 +28,22 @@ namespace GameMain
         /// </summary>
         private void Start()
         {
-            //var playerData = new PlayerData();
-            //playerData.Id = 1;
-            //playerData.TeamId = 1;
-            //playerData.UserId = 1001;
-            //playerData.Name = "测试名字A";
-            //var param = new BattleParam();
-            //param.Players.Add(playerData);
+            var hotfixResourceManager = new HotfixResourceManager();
+            hotfixResourceManager.ServerAddress = GameConfig.HotfixResourceAddress;
+            hotfixResourceManager.FinishedCallback = OnHotfixResourceFinished;
+            StartCoroutine(hotfixResourceManager.Start());
+        }
 
-            //var battle = new Battle();
-            //battle.Start(param);
-            //MonoUpdaterManager.Instance.AddFixedUpdateListener(battle.UpdateFrame);
-            //G.UnityObjectManager.AsyncGameObjectInstantiate("UI/Prefabs/UIMainRoot.prefab", (obj) => { });
+        /// <summary>
+        /// 热更完成回调
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnHotfixResourceFinished(EHotfixResourceResult result)
+        {
+            if (result == EHotfixResourceResult.Success)
+            {
+                Debug.LogError("热更新成功");
+            }
         }
 
         /// <summary>
@@ -50,7 +51,8 @@ namespace GameMain
         /// </summary>
         private void Update()
         {
-            MonoBehaviourUtils.Instance.Update(Time.deltaTime);
+            G.UIManager.Update();
+            G.UnityObjectManager.Update();
         }
 
         /// <summary>
@@ -58,7 +60,6 @@ namespace GameMain
         /// </summary>
         private void FixedUpdate()
         {
-            MonoBehaviourUtils.Instance.FixedUpdate(_fixedDeltaTime);
         }
     }
 }
