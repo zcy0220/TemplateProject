@@ -19,4 +19,8 @@
 *.mdb
 
 # Builds
-/[Bb]uilds/ 
+/[Bb]uilds/
+
+# AssetBundlePacker
+/Assets/StreamingAssets/assetbundles
+Assets/StreamingAssets/assetbundles.meta

@@ -4,6 +4,7 @@
 
 using UnityEngine;
 using GameUnityFramework.Resource;
+using GameMain.Views.UI;
 
 namespace GameMain
 {
@@ -28,22 +29,20 @@ namespace GameMain
         /// </summary>
         private void Start()
         {
+            var hotfixResourceMono = new GameObject("UIHotfixResourceMono").AddComponent<UIHotfixResourceMono>();
+
+
             var hotfixResourceManager = new HotfixResourceManager();
             hotfixResourceManager.ServerAddress = GameConfig.HotfixResourceAddress;
-            hotfixResourceManager.FinishedCallback = OnHotfixResourceFinished;
-            StartCoroutine(hotfixResourceManager.Start());
-        }
-
-        /// <summary>
-        /// 热更完成回调
-        /// </summary>
-        /// <param name="result"></param>
-        private void OnHotfixResourceFinished(EHotfixResourceResult result)
-        {
-            if (result == EHotfixResourceResult.Success)
+            hotfixResourceManager.FinishedCallback = (EHotfixResourceResult result) =>
             {
-                Debug.LogError("热更新成功");
-            }
+                if (result == EHotfixResourceResult.Hotfix)
+                {
+                    Debug.LogError("热更新成功");
+                }
+            };
+
+            StartCoroutine(hotfixResourceManager.Start());
         }
 
         /// <summary>
