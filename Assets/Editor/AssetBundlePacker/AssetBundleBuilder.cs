@@ -32,11 +32,16 @@ namespace Editor.AssetBundlePacker
 
     [Serializable]
     public class AllAssetsDependencies
-    { 
+    {
         /// <summary>
         /// AssetPath -> Dependencies
         /// </summary>
-        public Dictionary<string, DependencyData> DependencyDataDict;
+        public Dictionary<string, DependencyData> DependencyDataDict = new Dictionary<string, DependencyData>();
+        /// <summary>
+        /// 把文件夹名和文件名映射成它对应的位置索引
+        /// 减少存储量
+        /// </summary>
+        public List<string> AllDirectoryAndFileNames = new List<string>();
     }
 
     /// <summary>
@@ -67,29 +72,24 @@ namespace Editor.AssetBundlePacker
     public class AssetBundleBuilder
     {
         /// <summary>
+        /// 依赖缓存
+        /// </summary>
+        private AllAssetsDependencies _allAssetsDependencies;
+        /// <summary>
         /// (AssetPath -> AssetBundleItem)
         /// </summary>
         private Dictionary<string, AssetBundleItem> _assetBundleItemDict = new Dictionary<string, AssetBundleItem>();
         /// <summary>
-        /// 依赖缓存
+        /// 文件夹名称或文件名称 -> 索引
         /// </summary>
-        private Dictionary<string, DependencyData> _dependenciesCacheDict = new Dictionary<string, DependencyData>();
-
+        private Dictionary<string, int> _allDirectoryAndFileNamesDict = new Dictionary<string, int>();
+        
         /// <summary>
         /// 获取
         /// </summary>
         public void GetAllAssetsDependencies()
         {
-            var dependenciesCache = ReadDependenciesCache();
-            if (dependenciesCache != null)
-            {
-                _dependenciesCacheDict = dependenciesCache.DependencyDataDict;
-            }
-            else
-            {
-                dependenciesCache = new AllAssetsDependencies();
-            }
-
+            _allAssetsDependencies = ReadDependenciesCache();
             var fileList = Directory.GetFiles(AssetBundleConfig.PackRootPath, "*.*", SearchOption.AllDirectories);
             for (int i = 0; i < fileList.Length; i++)
             {
@@ -97,15 +97,17 @@ namespace Editor.AssetBundlePacker
                 if (AssetBundleHelper.IsValidAssetPath(filePath))
                 {
                     filePath = filePath.Replace("\\", "/");
-                    if (_dependenciesCacheDict.TryGetValue(filePath, out var dependencyData))
+                    var indexFilePath = GetIndexFilePath(filePath);
+                    if (_allAssetsDependencies.DependencyDataDict.TryGetValue(indexFilePath, out var dependencyData))
                     {
                         if (dependencyData.Dependencies != null)
                         {
                             for (int j = 0; j < dependencyData.Dependencies.Length; j++)
                             {
-                                var dependPath = dependencyData.Dependencies[j];
-                                if (_dependenciesCacheDict.TryGetValue(dependPath, out var item))
+                                var indexDependPath = dependencyData.Dependencies[j];
+                                if (_allAssetsDependencies.DependencyDataDict.TryGetValue(indexDependPath, out var item))
                                 {
+                                    var dependPath = GetRealFilePath(indexDependPath);
                                     var hash = AssetDatabase.GetAssetDependencyHash(dependPath);
                                     if (item.AssetDependencyHash != hash)
                                     {
@@ -128,9 +130,64 @@ namespace Editor.AssetBundlePacker
                 }
             }
 
-            dependenciesCache.DependencyDataDict = _dependenciesCacheDict;
-            SaveDependenciesCache(dependenciesCache);
+            SaveDependenciesCache(_allAssetsDependencies);
             AssetDatabase.Refresh();
+        }
+
+        /// <summary>
+        /// 获取文件名称映射为索引之后的文件路径
+        /// Assets/ArtPack/Pack/Test.png -> 1/2/3/4/5
+        /// </summary>
+        private string GetIndexFilePath(string filePath)
+        {
+            var result = "";
+            var names = filePath.Split("/");
+            for(int i = 0; i < names.Length; i++)
+            {
+                var name = names[i];
+                if (_allDirectoryAndFileNamesDict.ContainsKey(name))
+                {
+                    result += "/" + _allDirectoryAndFileNamesDict[name];
+                }
+                else
+                {
+                    var index = -1;
+                    for(int j = 0; j < _allAssetsDependencies.AllDirectoryAndFileNames.Count; j++)
+                    {
+                        if (_allAssetsDependencies.AllDirectoryAndFileNames[j] == name)
+                        {
+                            index = j;
+                            break;
+                        }
+                    }
+                    if (index == -1)
+                    {
+                        index = _allAssetsDependencies.AllDirectoryAndFileNames.Count;
+                        _allAssetsDependencies.AllDirectoryAndFileNames.Add(name);
+                    }
+                    _allDirectoryAndFileNamesDict.Add(name, index);
+                    result += "/" + index;
+                }
+            }
+            return result.Substring(1);
+        }
+
+        /// <summary>
+        /// 根据索引拼的路径获得真实的资源路径
+        /// </summary>
+        /// <param name="indexFilePath"></param>
+        /// <returns></returns>
+        private string GetRealFilePath(string indexFilePath)
+        {
+            var result = "";
+            var indexs = indexFilePath.Split("/");
+            for (int i = 0; i < indexs.Length; i++)
+            {
+                var index = int.Parse(indexs[i]);
+                var name = _allAssetsDependencies.AllDirectoryAndFileNames[index];
+                result += "/" + name;
+            }
+            return result.Substring(1);
         }
 
         /// <summary>
@@ -140,23 +197,30 @@ namespace Editor.AssetBundlePacker
         {
             Debug.LogError($"变化：{path}");
             var dependencyData = new DependencyData();
-            dependencyData.Dependencies = AssetDatabase.GetDependencies(path);
-            if (_dependenciesCacheDict.ContainsKey(path))
+            var dependencies = AssetDatabase.GetDependencies(path);
+            dependencyData.Dependencies = new string[dependencies.Length];
+            for (int i = 0; i < dependencies.Length; i++)
             {
-                _dependenciesCacheDict[path] = dependencyData;
+                dependencyData.Dependencies[i] = GetIndexFilePath(dependencies[i]);
+            }
+            var indexFilePath = GetIndexFilePath(path);
+            if (_allAssetsDependencies.DependencyDataDict.ContainsKey(indexFilePath))
+            {
+                _allAssetsDependencies.DependencyDataDict[indexFilePath] = dependencyData;
             }
             else
             {
-                _dependenciesCacheDict.Add(path, dependencyData);
+                _allAssetsDependencies.DependencyDataDict.Add(indexFilePath, dependencyData);
             }
-            for (int i = 0; i < dependencyData.Dependencies.Length; i++)
+            for (int i = 0; i < dependencies.Length; i++)
             {
-                var dependPath = dependencyData.Dependencies[i];
-                if (!_dependenciesCacheDict.ContainsKey(dependPath))
+                var dependPath = dependencies[i];
+                var indexDependFilePath = GetIndexFilePath(dependPath);
+                if (!_allAssetsDependencies.DependencyDataDict.ContainsKey(indexDependFilePath))
                 {
-                    _dependenciesCacheDict.Add(dependPath, new DependencyData());
+                    _allAssetsDependencies.DependencyDataDict.Add(indexDependFilePath, new DependencyData());
                 }
-                _dependenciesCacheDict[dependPath].AssetDependencyHash = AssetDatabase.GetAssetDependencyHash(dependPath);
+                _allAssetsDependencies.DependencyDataDict[indexDependFilePath].AssetDependencyHash = AssetDatabase.GetAssetDependencyHash(dependPath);
             }
         }
 
@@ -174,7 +238,7 @@ namespace Editor.AssetBundlePacker
                     return obj as AllAssetsDependencies;
                 }
             }
-            return null;
+            return new AllAssetsDependencies();
         }
 
         /// <summary>
