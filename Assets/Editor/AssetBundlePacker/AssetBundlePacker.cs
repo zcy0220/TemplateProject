@@ -43,21 +43,27 @@ namespace Editor.AssetBundlePacker
         [MenuItem("Tools/AssetBundlePacker/Test")]
         public static void Test()
         {
-            var forcePacks = new HashSet<string>()
+            var allAssetPaths = new string[]
+            {
+                "Assets/ArtPack/Pack/Tests/TestFolder/Test1.prefab",
+                "Assets/ArtPack/Pack/Tests/TestFolder/Test2.prefab",
+                "Assets/ArtPack/Pack/Tests/Test3.prefab",
+                "Assets/ArtPack/Pack/Tests/TestScene.unity",
+            };
+
+            var allForcePacks = new string[]
             {
                 "Assets/ArtPack/Pack/Shaders"
             };
-            var assetPaths = new string[]
-            {
-                "Assets/ArtPack/Pack/Tests/TestFolder/Test1.prefab",
-                "Assets/ArtPack/Pack/Tests/TestFolder/Test4.prefab",
-                //"Assets/ArtPack/Pack/Tests/Test3.prefab",
-                //"Assets/ArtPack/Pack/Tests/TestScene.unity",
-            };
-            var builder = new AssetBundleBuilder();
-            builder.Start(assetPaths, forcePacks);
-        }
 
+            var dependenciesbuilder = new DependenciesBuilder();
+            var allAssetsDependencies = dependenciesbuilder.GetAllAssetsDependencies(AssetBundleConfig.PackRootPath);
+            var assetBundleBuilder = new AssetBundleBuilder();
+            assetBundleBuilder.AllAssetPaths = allAssetPaths;
+            assetBundleBuilder.AllForcePacks = allForcePacks;
+            assetBundleBuilder.AllAssetsDependencies = allAssetsDependencies;
+            assetBundleBuilder.Start();
+        }
 
         /// <summary>
         /// 构建所有资源依赖
@@ -67,8 +73,8 @@ namespace Editor.AssetBundlePacker
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            var builder = new AssetBundleBuilder();
-            builder.GetAllAssetsDependencies();
+            var builder = new DependenciesBuilder();
+            builder.GetAllAssetsDependencies(AssetBundleConfig.PackRootPath);
             stopwatch.Stop();
             var timespan = stopwatch.Elapsed;
             Debug.Log($"<color=cyan>构建依赖耗时：{timespan.TotalMilliseconds}ms</color>");

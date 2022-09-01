@@ -17,9 +17,5 @@ namespace Editor.AssetBundlePacker
         /// AssetBundle导出目录
         /// </summary>
         public static readonly string AssetBundleExportPath = Path.Combine(Application.streamingAssetsPath, "assetbundles");
-        /// <summary>
-        /// 资源依赖数据缓存路径
-        /// </summary>
-        public static readonly string DependenciesCachePath = Path.Combine(Application.dataPath, "Editor/AssetBundlePacker/DependenciesCache.txt");
     }
 }
