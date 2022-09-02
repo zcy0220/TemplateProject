@@ -4,10 +4,8 @@
 
 using UnityEngine;
 using UnityEditor;
-using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Editor.AssetBundlePacker
 {
@@ -84,6 +82,7 @@ namespace Editor.AssetBundlePacker
                                 var item = new AssetBundleItem();
                                 item.AssetPath = dependPath;
                                 item.AssetBundleName = dependPath;
+                                item.LockAssetBundleName = dependPath.EndsWith(".unity");
                                 if (AllAssetsDependencies.TryGetValue(dependPath, out var data))
                                 {
                                     if (data.BeDependencies != null)
@@ -136,32 +135,29 @@ namespace Editor.AssetBundlePacker
         {
             foreach(var item in _assetBundleItemDict)
             {
-                if (item.Value.BeDependencies != null)
+                if (AssetBundleHelper.IsValidAssetPath(item.Key) && item.Value.BeDependencies != null)
                 {
                     if (item.Value.BeDependencies.Count == 1)
                     {
                         var beDependPath = item.Value.BeDependencies[0];
-                        if (!item.Value.LockAssetBundleName)
+                        if (_assetBundleItemDict.TryGetValue(beDependPath, out var abItem))
                         {
-                            if (_assetBundleItemDict.TryGetValue(beDependPath, out var abItem))
+                            if (abItem.AllDependencies == null)
                             {
-                                if (abItem.AllDependencies == null)
-                                {
-                                    abItem.AllDependencies = new List<string>() { item.Key };
-                                }
-                                else
-                                {
-                                    if (!abItem.AllDependencies.Contains(item.Key))
-                                    {
-                                        abItem.AllDependencies.Add(item.Key);
-                                    }
-                                }
-                                item.Value.AssetBundleName = abItem.AssetBundleName;
+                                abItem.AllDependencies = new List<string>() { item.Key };
                             }
                             else
                             {
-                                item.Value.AssetBundleName = beDependPath;
+                                if (!abItem.AllDependencies.Contains(item.Key))
+                                {
+                                    abItem.AllDependencies.Add(item.Key);
+                                }
                             }
+                            ModifyDependAssetBundleName(item.Value, abItem.AssetBundleName);
+                        }
+                        else
+                        {
+                            ModifyDependAssetBundleName(item.Value, beDependPath);
                         }
                     }
 
@@ -204,6 +200,10 @@ namespace Editor.AssetBundlePacker
                                     }
                                 }
                             }
+                            else
+                            {
+                                rootDependPath = path;
+                            }
                             if (!sameRootDependPath)
                             {
                                 break;
@@ -211,27 +211,36 @@ namespace Editor.AssetBundlePacker
                         }
                         if (!string.IsNullOrEmpty(rootDependPath) && sameRootDependPath)
                         {
-                            if (!item.Value.LockAssetBundleName)
+                            ModifyDependAssetBundleName(item.Value, rootDependPath);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 修改依赖中的AssetBundleName
+        /// </summary>
+        /// <param name="assetBundleName"></param>
+        private void ModifyDependAssetBundleName(AssetBundleItem item, string assetBundleName)
+        {
+            if (!item.LockAssetBundleName)
+            {
+                if (item.AllDependencies != null)
+                {
+                    for (int i = 0; i < item.AllDependencies.Count; i++)
+                    {
+                        var dependPath = item.AllDependencies[i];
+                        if (dependPath != item.AssetPath && _assetBundleItemDict.TryGetValue(dependPath, out var abItem))
+                        {
+                            if (abItem.AssetBundleName == item.AssetBundleName)
                             {
-                                if (item.Value.AllDependencies != null)
-                                {
-                                    for (int i = 0; i < item.Value.AllDependencies.Count; i++)
-                                    {
-                                        var dependPath = item.Value.AllDependencies[i];
-                                        if (_assetBundleItemDict.TryGetValue(dependPath, out var abItem))
-                                        {
-                                            if (abItem.AssetBundleName == item.Value.AssetBundleName)
-                                            {
-                                                abItem.AssetBundleName = rootDependPath;
-                                            }
-                                        }
-                                    }
-                                }
-                                item.Value.AssetBundleName = rootDependPath;
+                                abItem.AssetBundleName = assetBundleName;
                             }
                         }
                     }
                 }
+                item.AssetBundleName = assetBundleName;
             }
         }
 
@@ -244,14 +253,17 @@ namespace Editor.AssetBundlePacker
             var assetBundleBuildList = new List<AssetBundleBuild>();
             foreach(var item in _assetBundleItemDict)
             {
-                if (!assetBundleBuildDict.ContainsKey(item.Value.AssetBundleName))
+                if (AssetBundleHelper.IsValidAssetPath(item.Key))
                 {
-                    assetBundleBuildDict.Add(item.Value.AssetBundleName, new List<string>());
-                }
-                //和场景同AssetBundle的资源不用设置AB包名
-                if (!(!item.Key.EndsWith(".unity") && item.Value.AssetBundleName.EndsWith(".unity")))
-                {
-                    assetBundleBuildDict[item.Value.AssetBundleName].Add(item.Key);
+                    if (!assetBundleBuildDict.ContainsKey(item.Value.AssetBundleName))
+                    {
+                        assetBundleBuildDict.Add(item.Value.AssetBundleName, new List<string>());
+                    }
+                    //和场景同AssetBundle的资源不用设置AB包名
+                    if (!(!item.Key.EndsWith(".unity") && item.Value.AssetBundleName.EndsWith(".unity")))
+                    {
+                        assetBundleBuildDict[item.Value.AssetBundleName].Add(item.Key);
+                    }
                 }
             }
             foreach (var item in assetBundleBuildDict)
