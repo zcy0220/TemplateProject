@@ -43,11 +43,14 @@ namespace Editor.AssetBundlePacker
         [MenuItem("Tools/AssetBundlePacker/Test")]
         public static void Test()
         {
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
             var allAssetPaths = new string[]
             {
                 "Assets/ArtPack/Pack/Tests/TestFolder/Test1.prefab",
                 "Assets/ArtPack/Pack/Tests/TestFolder/Test2.prefab",
                 "Assets/ArtPack/Pack/Tests/Test3.prefab",
+                "Assets/ArtPack/Pack/Tests/Test4.prefab",
                 "Assets/ArtPack/Pack/Tests/TestScene.unity",
             };
 
@@ -63,6 +66,9 @@ namespace Editor.AssetBundlePacker
             assetBundleBuilder.AllForcePacks = allForcePacks;
             assetBundleBuilder.AllAssetsDependencies = allAssetsDependencies;
             assetBundleBuilder.Start();
+            stopwatch.Stop();
+            var timespan = stopwatch.Elapsed;
+            Debug.Log($"<color=cyan>构建耗时：{timespan.TotalMilliseconds}ms</color>");
         }
 
         /// <summary>

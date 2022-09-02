@@ -145,6 +145,7 @@ namespace Editor.AssetBundlePacker
         /// </summary>
         private string GetIndexFilePath(string filePath)
         {
+            //return filePath;
             var result = "";
             var names = filePath.Split("/");
             for (int i = 0; i < names.Length; i++)
@@ -184,6 +185,7 @@ namespace Editor.AssetBundlePacker
         /// <returns></returns>
         private string GetRealFilePath(string indexFilePath)
         {
+            //return indexFilePath;
             var result = "";
             var indexs = indexFilePath.Split("/");
             for (int i = 0; i < indexs.Length; i++)
@@ -215,14 +217,25 @@ namespace Editor.AssetBundlePacker
                     dependencyData = new DependencyData();
                     _allAssetsDependencies.DependencyDataDict.Add(indexFilePath, dependencyData);
                 }
-                dependencyData.AssetDependencyHash = AssetDatabase.GetAssetDependencyHash(filePath);
-                if (dependencyData.Dependencies == null)
+
+                //新老依赖对比、去除依赖关系解除的
+                if (dependencyData.Dependencies != null)
                 {
-                    dependencyData.Dependencies = new string[dependencies.Length];
-                    for (int i = 0; i < dependencies.Length; i++)
+                    for (int i = 0; i < dependencyData.Dependencies.Length; i++)
                     {
-                        dependencyData.Dependencies[i] = GetIndexFilePath(dependencies[i]);
+                        var dependPath = dependencyData.Dependencies[i];
+                        if (_allAssetsDependencies.DependencyDataDict.TryGetValue(dependPath, out var beDdependencyData))
+                        {
+                            beDdependencyData.BeDependencies.Remove(indexFilePath);
+                        }
                     }
+                }
+
+                dependencyData.AssetDependencyHash = AssetDatabase.GetAssetDependencyHash(filePath);
+                dependencyData.Dependencies = new string[dependencies.Length];
+                for (int i = 0; i < dependencies.Length; i++)
+                {
+                    dependencyData.Dependencies[i] = GetIndexFilePath(dependencies[i]);
                 }
                 for (int i = 0; i < dependencies.Length; i++)
                 {
@@ -232,17 +245,17 @@ namespace Editor.AssetBundlePacker
                     {
                         allDependenciesList.Add(dependPath);
                         stack.Push(dependPath);
-                        var indexDependPath = GetIndexFilePath(dependPath);
-                        if (!_allAssetsDependencies.DependencyDataDict.TryGetValue(indexDependPath, out var beDdependencyData))
-                        {
-                            beDdependencyData = new DependencyData();
-                            _allAssetsDependencies.DependencyDataDict.Add(indexDependPath, beDdependencyData);
-                        }
-                        beDdependencyData.AssetDependencyHash = AssetDatabase.GetAssetDependencyHash(dependPath);
-                        if (!beDdependencyData.BeDependencies.Contains(filePath))
-                        {
-                            beDdependencyData.BeDependencies.Add(indexFilePath);
-                        }
+                    }
+                    var indexDependPath = GetIndexFilePath(dependPath);
+                    if (!_allAssetsDependencies.DependencyDataDict.TryGetValue(indexDependPath, out var beDdependencyData))
+                    {
+                        beDdependencyData = new DependencyData();
+                        _allAssetsDependencies.DependencyDataDict.Add(indexDependPath, beDdependencyData);
+                    }
+                    beDdependencyData.AssetDependencyHash = AssetDatabase.GetAssetDependencyHash(dependPath);
+                    if (!beDdependencyData.BeDependencies.Contains(indexFilePath))
+                    {
+                        beDdependencyData.BeDependencies.Add(indexFilePath);
                     }
                 }
             }

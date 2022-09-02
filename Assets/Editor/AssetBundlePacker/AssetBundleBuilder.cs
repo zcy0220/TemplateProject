@@ -25,10 +25,14 @@ namespace Editor.AssetBundlePacker
         /// </summary>
         public string AssetBundleName = string.Empty;
         /// <summary>
+        /// 锁住资源对应的AB包名
+        /// </summary>
+        public bool LockAssetBundleName = false;
+        /// <summary>
         /// 该资源的所有依赖项
         /// 不递归
         /// </summary>
-        public List<string> Dependencies;
+        public List<string> AllDependencies;
         /// <summary>
         /// 依赖该资源的所有资源项
         /// 不递归
@@ -48,31 +52,14 @@ namespace Editor.AssetBundlePacker
         public Dictionary<string, DependencyData> AllAssetsDependencies { get; set; }
 
         /// <summary>
-        /// 根据路径获取对应的AssetBundleItem
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public AssetBundleItem GetAssetBundleItem(string path)
-        {
-            path = path.Replace("\\", "/");
-            if (!_assetBundleItemDict.TryGetValue(path, out var item))
-            {
-                item = new AssetBundleItem();
-                item.AssetPath = path;
-                item.AssetBundleName = AssetBundleHelper.GetAssetBundleName(path);
-                _assetBundleItemDict.Add(path, item);
-            }
-            return item;
-        }
-
-        /// <summary>
         /// 开始构建AssetBundle
         /// 检测依赖
         /// </summary>
         public void Start()
         {
             CreateAssetDependsMap();
-            //GroupingAssetBundles();
+            GroupingAssetBundles();
+            BuildAssetBundles();
         }
 
         /// <summary>
@@ -80,6 +67,66 @@ namespace Editor.AssetBundlePacker
         /// </summary>
         public void CreateAssetDependsMap()
         {
+            //建立所有资源的AssetBundleItem
+            for (int i = 0; i < AllAssetPaths.Length; i++)
+            {
+                var path = AllAssetPaths[i];
+                path = path.Replace("\\", "/");
+                if (AllAssetsDependencies.TryGetValue(path, out var dependencyData))
+                {
+                    if (dependencyData.AllDependencies != null)
+                    {
+                        for(int j = 0; j < dependencyData.AllDependencies.Length; j++)
+                        {
+                            var dependPath = dependencyData.AllDependencies[j];
+                            if (!_assetBundleItemDict.ContainsKey(dependPath))
+                            {
+                                var item = new AssetBundleItem();
+                                item.AssetPath = dependPath;
+                                item.AssetBundleName = dependPath;
+                                if (AllAssetsDependencies.TryGetValue(dependPath, out var data))
+                                {
+                                    if (data.BeDependencies != null)
+                                    {
+                                        item.BeDependencies = new List<string>(data.BeDependencies);
+                                    }
+                                    if (data.AllDependencies != null)
+                                    {
+                                        item.AllDependencies = new List<string>(data.AllDependencies);
+                                    }
+                                }
+                                _assetBundleItemDict.Add(dependPath, item);
+                            }
+                        }
+                    }
+                }
+            }
+
+            //根据需要强制打成一个包的配置
+            for (int i = 0; i < AllForcePacks.Length; i++)
+            {
+                var path = AllForcePacks[i].Replace("\\", "/");
+                if (File.Exists(path))
+                {
+                    if (_assetBundleItemDict.TryGetValue(path, out var item))
+                    {
+                        item.LockAssetBundleName = true;
+                    }
+                }
+                else if (Directory.Exists(path))
+                {
+                    var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+                    for (var j = 0; j < files.Length; j++)
+                    {
+                        var fpath = files[j].Replace("\\", "/");
+                        if (_assetBundleItemDict.TryGetValue(fpath, out var item))
+                        {
+                            item.BeDependencies.Clear();
+                            item.BeDependencies.Add(path);
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -87,6 +134,105 @@ namespace Editor.AssetBundlePacker
         /// </summary>
         public void GroupingAssetBundles()
         {
+            foreach(var item in _assetBundleItemDict)
+            {
+                if (item.Value.BeDependencies != null)
+                {
+                    if (item.Value.BeDependencies.Count == 1)
+                    {
+                        var beDependPath = item.Value.BeDependencies[0];
+                        if (!item.Value.LockAssetBundleName)
+                        {
+                            if (_assetBundleItemDict.TryGetValue(beDependPath, out var abItem))
+                            {
+                                if (abItem.AllDependencies == null)
+                                {
+                                    abItem.AllDependencies = new List<string>() { item.Key };
+                                }
+                                else
+                                {
+                                    if (!abItem.AllDependencies.Contains(item.Key))
+                                    {
+                                        abItem.AllDependencies.Add(item.Key);
+                                    }
+                                }
+                                item.Value.AssetBundleName = abItem.AssetBundleName;
+                            }
+                            else
+                            {
+                                item.Value.AssetBundleName = beDependPath;
+                            }
+                        }
+                    }
+
+                    if (item.Value.BeDependencies.Count > 1)
+                    {
+                        //防止有极特殊的情况下，有相互依赖的资源
+                        var checkHashSet = new HashSet<string>();
+                        var rootDependPath = string.Empty;
+                        var sameRootDependPath = true;
+                        var stack = new Stack<string>();
+                        stack.Push(item.Key);
+                        while (stack.Count > 0)
+                        {
+                            var path = stack.Pop();
+                            if (_assetBundleItemDict.TryGetValue(path, out var abItem))
+                            {
+                                if (abItem.BeDependencies.Count == 0)
+                                {
+                                    if (string.IsNullOrEmpty(rootDependPath))
+                                    {
+                                        rootDependPath = path;
+                                    }
+                                    else
+                                    {
+                                        if (rootDependPath != path)
+                                        {
+                                            sameRootDependPath = false;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                for (int i = 0; i < abItem.BeDependencies.Count; i++)
+                                {
+                                    var beDependPath = abItem.BeDependencies[i];
+                                    if (!checkHashSet.Contains(beDependPath))
+                                    {
+                                        checkHashSet.Add(beDependPath);
+                                        stack.Push(beDependPath);
+                                    }
+                                }
+                            }
+                            if (!sameRootDependPath)
+                            {
+                                break;
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(rootDependPath) && sameRootDependPath)
+                        {
+                            if (!item.Value.LockAssetBundleName)
+                            {
+                                if (item.Value.AllDependencies != null)
+                                {
+                                    for (int i = 0; i < item.Value.AllDependencies.Count; i++)
+                                    {
+                                        var dependPath = item.Value.AllDependencies[i];
+                                        if (_assetBundleItemDict.TryGetValue(dependPath, out var abItem))
+                                        {
+                                            if (abItem.AssetBundleName == item.Value.AssetBundleName)
+                                            {
+                                                abItem.AssetBundleName = rootDependPath;
+                                            }
+                                        }
+                                    }
+                                }
+                                item.Value.AssetBundleName = rootDependPath;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -102,12 +248,16 @@ namespace Editor.AssetBundlePacker
                 {
                     assetBundleBuildDict.Add(item.Value.AssetBundleName, new List<string>());
                 }
-                assetBundleBuildDict[item.Value.AssetBundleName].Add(item.Key);
+                //和场景同AssetBundle的资源不用设置AB包名
+                if (!(!item.Key.EndsWith(".unity") && item.Value.AssetBundleName.EndsWith(".unity")))
+                {
+                    assetBundleBuildDict[item.Value.AssetBundleName].Add(item.Key);
+                }
             }
             foreach (var item in assetBundleBuildDict)
             {
                 var build = new AssetBundleBuild();
-                build.assetBundleName = item.Key;
+                build.assetBundleName = AssetBundleHelper.GetAssetBundleName(item.Key);
                 build.assetNames = item.Value.ToArray();
                 assetBundleBuildList.Add(build);
             }
@@ -123,7 +273,8 @@ namespace Editor.AssetBundlePacker
             }
             else
             {
-                Debug.Log($"BuildPipeline.BuildAssetBundles Success!");
+                Debug.Log("<color=cyan>BuildPipeline.BuildAssetBundles Success!</color>");
+                Debug.Log($"<color=cyan>AB包数量：{assetBundleManifest.GetAllAssetBundles().Length}</color>");
             }
             AssetDatabase.Refresh();
         }
