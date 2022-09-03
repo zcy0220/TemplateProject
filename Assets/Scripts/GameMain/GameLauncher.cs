@@ -29,20 +29,18 @@ namespace GameMain
         /// </summary>
         private void Start()
         {
-            var hotfixResourceMono = new GameObject("UIHotfixResourceMono").AddComponent<UIHotfixResourceMono>();
-
-
-            var hotfixResourceManager = new HotfixResourceManager();
-            hotfixResourceManager.ServerAddress = GameConfig.HotfixResourceAddress;
-            hotfixResourceManager.FinishedCallback = (EHotfixResourceResult result) =>
+            HotfixResourceManager.Init(GameConfig.HotfixResourceAddress, (EHotfixResourceStatus status) =>
             {
-                if (result == EHotfixResourceResult.Hotfix)
+                switch(status)
                 {
-                    Debug.LogError("热更新成功");
+                    case EHotfixResourceStatus.StartHotfix:
+                        Debug.LogError("开始热更新");
+                        break;
+                    case EHotfixResourceStatus.HotfixSuccess:
+                        Debug.LogError("热更新成功");
+                        break;
                 }
-            };
-
-            StartCoroutine(hotfixResourceManager.Start());
+            });
         }
 
         /// <summary>

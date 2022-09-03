@@ -57,6 +57,7 @@ namespace Editor.AssetBundlePacker
         {
             CreateAssetDependsMap();
             GroupingAssetBundles();
+            CreatePackConfig();
             BuildAssetBundles();
         }
 
@@ -202,7 +203,18 @@ namespace Editor.AssetBundlePacker
                             }
                             else
                             {
-                                rootDependPath = path;
+                                if (string.IsNullOrEmpty(rootDependPath))
+                                {
+                                    rootDependPath = path;
+                                }
+                                else
+                                {
+                                    if (rootDependPath != path)
+                                    {
+                                        sameRootDependPath = false;
+                                        break;
+                                    }
+                                }
                             }
                             if (!sameRootDependPath)
                             {
@@ -241,6 +253,27 @@ namespace Editor.AssetBundlePacker
                     }
                 }
                 item.AssetBundleName = assetBundleName;
+            }
+        }
+
+        /// <summary>
+        /// 生成AssetBundleConfig配置文件
+        /// </summary>
+        public void CreatePackConfig()
+        {
+            var packConfigBuilder = new PackConfigBuilder();
+            packConfigBuilder.Build(_assetBundleItemDict);
+            var item = new AssetBundleItem();
+            item.AssetPath = AssetBundleConfig.PackConfigPath;
+            item.AssetBundleName = AssetBundleConfig.PackConfigPath;
+            if (_assetBundleItemDict.ContainsKey(AssetBundleConfig.PackConfigPath))
+            {
+                _assetBundleItemDict[AssetBundleConfig.PackConfigPath] = item;
+            }
+            else
+            {
+                _assetBundleItemDict.Add(AssetBundleConfig.PackConfigPath, item);
+                AssetDatabase.Refresh();
             }
         }
 

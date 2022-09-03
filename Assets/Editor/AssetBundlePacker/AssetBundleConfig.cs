@@ -14,6 +14,10 @@ namespace Editor.AssetBundlePacker
         /// </summary>
         public static readonly string PackRootPath = "Assets/ArtPack/Pack";
         /// <summary>
+        /// 资源路径和AssetBundle映射表
+        /// </summary>
+        public static readonly string PackConfigPath = PackRootPath + "/PackConfig.txt";
+        /// <summary>
         /// AssetBundle导出目录
         /// </summary>
         public static readonly string AssetBundleExportPath = Path.Combine(Application.streamingAssetsPath, "assetbundles");
