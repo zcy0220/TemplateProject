@@ -50,6 +50,7 @@ namespace Editor.AssetBundlePacker
 
     public class DependenciesBuilder
     {
+        private const string HASH_NONE = "00000000000000000000000000000000";
         /// <summary>
         /// 依赖缓存
         /// </summary>
@@ -106,8 +107,8 @@ namespace Editor.AssetBundlePacker
                     }
                 }
             }
-
             needRefreshDependenciesList.ForEach((filePath) => RefreshDependencies(filePath));
+            ClearNoneAssets();
             SaveDependenciesCache(_allAssetsDependencies);
             
             var dependencies = new Dictionary<string, DependencyData>();
@@ -137,6 +138,66 @@ namespace Editor.AssetBundlePacker
                 dependencies.Add(GetRealFilePath(item.Key), item.Value);
             }
             return dependencies;
+        }
+
+        /// <summary>
+        /// 清空已经删除的资源
+        /// </summary>
+        private void ClearNoneAssets()
+        {
+            var removeList = new List<string>();
+            foreach (var item in _allAssetsDependencies.DependencyDataDict)
+            {
+                var filePath = GetRealFilePath(item.Key);
+                if (AssetDatabase.GetAssetDependencyHash(filePath).ToString() == HASH_NONE)
+                {
+                    removeList.Add(item.Key);
+                }
+
+                if (item.Value.AllDependencies != null)
+                {
+                    var list = new List<string>();
+                    for (int i = 0; i < item.Value.AllDependencies.Length; i++)
+                    {
+                        var dependPath = GetRealFilePath(item.Value.AllDependencies[i]);
+                        if (AssetDatabase.GetAssetDependencyHash(dependPath).ToString() != HASH_NONE)
+                        {
+                            list.Add(item.Value.AllDependencies[i]);
+                        }
+                    }
+                    item.Value.AllDependencies = list.ToArray();
+                }
+                if (item.Value.Dependencies != null)
+                {
+                    var list = new List<string>();
+                    for (int i = 0; i < item.Value.Dependencies.Length; i++)
+                    {
+                        var dependPath = GetRealFilePath(item.Value.Dependencies[i]);
+                        if (AssetDatabase.GetAssetDependencyHash(dependPath).ToString() != HASH_NONE)
+                        {
+                            list.Add(item.Value.Dependencies[i]);
+                        }
+                    }
+                    item.Value.Dependencies = list.ToArray();
+                }
+                if (item.Value.BeDependencies != null)
+                {
+                    var list = new List<string>();
+                    for (int i = 0; i < item.Value.BeDependencies.Count; i++)
+                    {
+                        var dependPath = GetRealFilePath(item.Value.BeDependencies[i]);
+                        if (AssetDatabase.GetAssetDependencyHash(dependPath).ToString() != HASH_NONE)
+                        {
+                            list.Add(item.Value.BeDependencies[i]);
+                        }
+                    }
+                    item.Value.BeDependencies = list;
+                }
+            }
+            for (int i = 0; i < removeList.Count; i++)
+            {
+                _allAssetsDependencies.DependencyDataDict.Remove(removeList[i]);
+            }
         }
 
         /// <summary>
@@ -202,7 +263,7 @@ namespace Editor.AssetBundlePacker
         /// </summary>
         private void RefreshDependencies(string path)
         {
-            Debug.LogError($"变化：{path}");
+            Debug.Log($"变化：{path}");
             var allDependenciesList = new HashSet<string>();
             var stack = new Stack<string>();
             stack.Push(path);

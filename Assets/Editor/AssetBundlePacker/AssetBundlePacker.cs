@@ -35,8 +35,7 @@ namespace Editor.AssetBundlePacker
 
             var allForcePacks = new string[]
             {
-                "Assets/ArtPack/Pack/Shaders",
-                "Assets/ArtPack/Pack/Tests/TestFolder"
+                "Assets/ArtPack/Test",
             };
 
             var dependenciesbuilder = new DependenciesBuilder();
@@ -60,9 +59,10 @@ namespace Editor.AssetBundlePacker
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             var builder = new DependenciesBuilder();
-            builder.GetAllAssetsDependencies(AssetBundleConfig.PackRootPath);
+            var allAssetsDependencies = builder.GetAllAssetsDependencies(AssetBundleConfig.PackRootPath);
             stopwatch.Stop();
             var timespan = stopwatch.Elapsed;
+            Debug.Log($"<color=cyan>总资源数：{allAssetsDependencies.Count}</color>");
             Debug.Log($"<color=cyan>构建依赖耗时：{timespan.TotalMilliseconds}ms</color>");
         }
     }

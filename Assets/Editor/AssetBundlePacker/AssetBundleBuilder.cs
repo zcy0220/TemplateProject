@@ -64,7 +64,7 @@ namespace Editor.AssetBundlePacker
         /// <summary>
         /// 遍历资源，建立依赖映射
         /// </summary>
-        public void CreateAssetDependsMap()
+        private void CreateAssetDependsMap()
         {
             //建立所有资源的AssetBundleItem
             for (int i = 0; i < AllAssetPaths.Length; i++)
@@ -88,7 +88,15 @@ namespace Editor.AssetBundlePacker
                                 {
                                     if (data.BeDependencies != null)
                                     {
-                                        item.BeDependencies = new List<string>(data.BeDependencies);
+                                        item.BeDependencies = new List<string>();
+                                        foreach(var beDependPath in data.BeDependencies)
+                                        {
+                                            //是否是有效的资源
+                                            if (IsValidAsset(beDependPath))
+                                            {
+                                                item.BeDependencies.Add(beDependPath);
+                                            }
+                                        }
                                     }
                                     if (data.AllDependencies != null)
                                     {
@@ -121,7 +129,7 @@ namespace Editor.AssetBundlePacker
                         var fpath = files[j].Replace("\\", "/");
                         if (_assetBundleItemDict.TryGetValue(fpath, out var item))
                         {
-                            item.BeDependencies.Clear();
+                            //item.BeDependencies.Clear();
                             item.BeDependencies.Add(path);
                         }
                     }
@@ -130,9 +138,37 @@ namespace Editor.AssetBundlePacker
         }
 
         /// <summary>
+        /// 判断是否为有效的资源
+        /// </summary>
+        private bool IsValidAsset(string path)
+        {
+            var checkHashSet = new HashSet<string>();
+            var stack = new Stack<string>();
+            stack.Push(path);
+            while (stack.Count > 0)
+            {
+                path = stack.Pop();
+                //是否是有效的资源
+                if (path.StartsWith(AssetBundleConfig.PackRootPath, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+                if (_assetBundleItemDict.TryGetValue(path, out var item))
+                {
+                    for (int i = 0; i < item.BeDependencies.Count; i++)
+                    {
+                        stack.Push(item.BeDependencies[i]);
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// 分组AssetBundles
         /// </summary>
-        public void GroupingAssetBundles()
+        private void GroupingAssetBundles()
         {
             foreach(var item in _assetBundleItemDict)
             {
@@ -259,7 +295,7 @@ namespace Editor.AssetBundlePacker
         /// <summary>
         /// 生成AssetBundleConfig配置文件
         /// </summary>
-        public void CreatePackConfig()
+        private void CreatePackConfig()
         {
             var packConfigBuilder = new PackConfigBuilder();
             packConfigBuilder.Build(_assetBundleItemDict);
@@ -280,7 +316,7 @@ namespace Editor.AssetBundlePacker
         /// <summary>
         /// 最终构建AssetBundles
         /// </summary>
-        public void BuildAssetBundles()
+        private void BuildAssetBundles()
         {
             var assetBundleBuildDict = new Dictionary<string, List<string>>();
             var assetBundleBuildList = new List<AssetBundleBuild>();

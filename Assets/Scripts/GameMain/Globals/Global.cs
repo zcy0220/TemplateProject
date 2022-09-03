@@ -12,15 +12,15 @@ namespace GameMain
     public class G
     {
         #region EventManager
-        public static EventManager EventManager = new();
+        public static EventManager EventManager = new EventManager();
         #endregion
 
         #region UIManager
-        public static UIManager UIManager = new();
+        public static UIManager UIManager = new UIManager();
         #endregion
 
         #region DataModuleManager
-        public static DataModuleManager DataModuleManager = new();
+        public static DataModuleManager DataModuleManager = new DataModuleManager();
         #endregion
 
         #region UnityObjectManager
@@ -31,7 +31,7 @@ namespace GameMain
             {
                 if (_unityObjectManager == null)
                 {
-                    _unityObjectManager = new("Assets/ArtPack/Pack");
+                    _unityObjectManager = new UnityObjectManager("Assets/ArtPack/Pack");
                 }
                 return _unityObjectManager;
             }
