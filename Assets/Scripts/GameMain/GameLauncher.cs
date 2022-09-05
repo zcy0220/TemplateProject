@@ -4,7 +4,6 @@
 
 using UnityEngine;
 using GameUnityFramework.Resource;
-using GameMain.Views.UI;
 
 namespace GameMain
 {
@@ -29,18 +28,40 @@ namespace GameMain
         /// </summary>
         private void Start()
         {
-            HotfixResourceManager.Init(GameConfig.HotfixResourceAddress, (EHotfixResourceStatus status) =>
+            if (GameConfig.AssetBundleEncryptkey.Length > 0)
             {
-                switch(status)
+                AssetBundle.SetAssetBundleDecryptKey(GameConfig.AssetBundleEncryptkey);
+            }
+
+            if (GameConfig.IsOpenHotfixResource)
+            {
+                var obj = Resources.Load<GameObject>("HotfixResourceManager");
+                var hotfixResourceManager = GameObject.Instantiate(obj).GetComponent<HotfixResourceManager>();
+                hotfixResourceManager.OnStatusCallback = (status) =>
                 {
-                    case EHotfixResourceStatus.StartHotfix:
-                        Debug.LogError("开始热更新");
-                        break;
-                    case EHotfixResourceStatus.HotfixSuccess:
-                        Debug.LogError("热更新成功");
-                        break;
-                }
-            });
+                    switch (status)
+                    {
+                        case EHotfixResourceStatus.StartHotfix:
+                            break;
+                        case EHotfixResourceStatus.EnterGame:
+                            EnterGame();
+                            break;
+                    }
+                };
+                StartCoroutine(hotfixResourceManager.Startup(GameConfig.HotfixResourceAddress));
+            }
+            else
+            {
+                EnterGame();
+            }
+        }
+
+        /// <summary>
+        /// 正式进入游戏
+        /// </summary>
+        private void EnterGame()
+        {
+            Debug.LogError("进入游戏");
         }
 
         /// <summary>

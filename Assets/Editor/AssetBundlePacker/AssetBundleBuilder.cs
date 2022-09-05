@@ -343,10 +343,22 @@ namespace Editor.AssetBundlePacker
                 assetBundleBuildList.Add(build);
             }
             var outputPath = AssetBundleConfig.AssetBundleExportPath;
-            var options = BuildAssetBundleOptions.ChunkBasedCompression;
-            var targetPlatform = EditorUserBuildSettings.activeBuildTarget;
             FileUtil.DeleteFileOrDirectory(outputPath);
             Directory.CreateDirectory(outputPath);
+
+            var options = BuildAssetBundleOptions.ChunkBasedCompression;
+            
+            if (GameMain.GameConfig.AssetBundleEncryptkey.Length > 0)
+            {
+                options |= BuildAssetBundleOptions.EnableProtection;
+                BuildPipeline.SetAssetBundleEncryptKey(GameMain.GameConfig.AssetBundleEncryptkey);
+            }
+            else
+            {
+                BuildPipeline.SetAssetBundleEncryptKey(null);
+            }
+
+            var targetPlatform = EditorUserBuildSettings.activeBuildTarget;
             var assetBundleManifest = BuildPipeline.BuildAssetBundles(outputPath, assetBundleBuildList.ToArray(), options, targetPlatform);
             if (assetBundleManifest == null)
             {
