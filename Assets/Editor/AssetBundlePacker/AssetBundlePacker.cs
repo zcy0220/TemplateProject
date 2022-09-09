@@ -17,7 +17,7 @@ namespace Editor.AssetBundlePacker
         /// 构建测试AssetBundle
         /// </summary>
         [MenuItem("Tools/AssetBundlePacker/Build")]
-        public static void Build()
+        public static bool Build()
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -48,6 +48,7 @@ namespace Editor.AssetBundlePacker
             stopwatch.Stop();
             var timespan = stopwatch.Elapsed;
             Debug.Log($"<color=cyan>构建耗时：{timespan.TotalMilliseconds}ms</color>");
+            return true;
         }
 
         /// <summary>

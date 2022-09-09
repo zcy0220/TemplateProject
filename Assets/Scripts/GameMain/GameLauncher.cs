@@ -3,6 +3,7 @@
  */
 
 using UnityEngine;
+using GameUnityFramework.Log;
 using GameUnityFramework.Resource;
 
 namespace GameMain
@@ -76,7 +77,7 @@ namespace GameMain
         private void EnterGame()
         {
             _isRunning = true;
-            Debug.LogError("进入游戏");
+            Debuger.Log("进入游戏", "cyan");
             G.UnityObjectManager.SyncGameObjectInstantiate("Tests/Test4.prefab");
         }
 

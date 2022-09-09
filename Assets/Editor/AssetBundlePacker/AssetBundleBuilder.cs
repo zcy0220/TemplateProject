@@ -67,6 +67,7 @@ namespace Editor.AssetBundlePacker
         /// </summary>
         private void CreateAssetDependsMap()
         {
+            Debug.Log($"<color=cyan>assetbundle build ==> ：create asset depends map</color>");
             //建立所有资源的AssetBundleItem
             for (int i = 0; i < AllAssetPaths.Length; i++)
             {
@@ -96,6 +97,14 @@ namespace Editor.AssetBundlePacker
                                             if (IsValidAsset(beDependPath))
                                             {
                                                 item.BeDependencies.Add(beDependPath);
+
+                                                if (beDependPath.EndsWith(".unity") &&
+                                                    item.AssetPath.StartsWith(AssetBundleConfig.PackRootPath, System.StringComparison.OrdinalIgnoreCase))
+                                                {
+                                                    //如果该资源需要被代码动态加载，然后被依赖项中有场景，就锁住AssetBundleName
+                                                    //因为Unity不能从一个Scene AssetBundle中加载资源
+                                                    item.LockAssetBundleName = true;
+                                                }
                                             }
                                         }
                                     }
@@ -143,7 +152,6 @@ namespace Editor.AssetBundlePacker
         /// </summary>
         private bool IsValidAsset(string path)
         {
-            var checkHashSet = new HashSet<string>();
             var stack = new Stack<string>();
             stack.Push(path);
             while (stack.Count > 0)
@@ -171,7 +179,8 @@ namespace Editor.AssetBundlePacker
         /// </summary>
         private void GroupingAssetBundles()
         {
-            foreach(var item in _assetBundleItemDict)
+            Debug.Log($"<color=cyan>assetbundle build ==> ：grouping assetbundles</color>");
+            foreach (var item in _assetBundleItemDict)
             {
                 if (AssetBundleHelper.IsValidAssetPath(item.Key) && item.Value.BeDependencies != null)
                 {
@@ -298,6 +307,7 @@ namespace Editor.AssetBundlePacker
         /// </summary>
         private void CreatePackConfig()
         {
+            Debug.Log($"<color=cyan>assetbundle build ==> ：create packconfig</color>");
             var packConfigBuilder = new PackConfigBuilder();
             packConfigBuilder.Build(_assetBundleItemDict);
             var item = new AssetBundleItem();
@@ -317,8 +327,9 @@ namespace Editor.AssetBundlePacker
         /// <summary>
         /// 最终构建AssetBundles
         /// </summary>
-        private void BuildAssetBundles()
+        private bool BuildAssetBundles()
         {
+            Debug.Log($"<color=cyan>assetbundle build ==> ：build assetbundles</color>");
             var assetBundleBuildDict = new Dictionary<string, List<string>>();
             var assetBundleBuildList = new List<AssetBundleBuild>();
             foreach(var item in _assetBundleItemDict)
@@ -363,12 +374,40 @@ namespace Editor.AssetBundlePacker
             var assetBundleManifest = BuildPipeline.BuildAssetBundles(outputPath, assetBundleBuildList.ToArray(), options, targetPlatform);
             if (assetBundleManifest == null)
             {
-                Debug.LogError("BuildPipeline.BuildAssetBundles Failed!");
+                Debug.LogError($"assetbundle build ==> ：build pipeline.build assetbundles failed!");
+                return false;
             }
             else
             {
-                Debug.Log("<color=cyan>BuildPipeline.BuildAssetBundles Success!</color>");
-                Debug.Log($"<color=cyan>AB包数量：{assetBundleManifest.GetAllAssetBundles().Length}</color>");
+                Debug.Log($"<color=cyan>assetbundle build ==> ：build pipeline.build assetbundles success</color>");
+                Debug.Log($"<color=cyan>assetbundle build ==> : assetbundle count：{assetBundleManifest.GetAllAssetBundles().Length}</color>");
+                CleanAssetBundles(assetBundleBuildDict);
+                return true;
+            }
+        }
+
+
+        /// <summary>
+        /// 清理多余的AssetBundles
+        /// </summary>
+        private static void CleanAssetBundles(Dictionary<string, List<string>> assetBundleBuildDict)
+        {
+            Debug.Log($"<color=cyan>assetbundle build ==> ：clean assetbundles</color>");
+            var assetBundleNameHashSet = new HashSet<string>();
+            foreach(var key in assetBundleBuildDict.Keys)
+            {
+                assetBundleNameHashSet.Add(ResourcePathHelper.GetAssetBundleName(key));
+            }
+            string outputPath = AssetBundleConfig.AssetBundleExportPath;
+            var outputDirName = Path.GetFileName(outputPath);
+            var fileList = Directory.GetFiles(outputPath, "*.*", SearchOption.AllDirectories);
+            foreach (var file in fileList)
+            {
+                var fileName = Path.GetFileName(file).Split('.')[0];
+                if (fileName != outputDirName && !assetBundleNameHashSet.Contains(fileName))
+                {
+                    FileUtil.DeleteFileOrDirectory(file);
+                }
             }
             AssetDatabase.Refresh();
         }
