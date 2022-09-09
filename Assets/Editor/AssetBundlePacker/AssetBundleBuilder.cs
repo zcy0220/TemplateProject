@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
+using GameUnityFramework.Resource;
 
 namespace Editor.AssetBundlePacker
 {
@@ -338,7 +339,7 @@ namespace Editor.AssetBundlePacker
             foreach (var item in assetBundleBuildDict)
             {
                 var build = new AssetBundleBuild();
-                build.assetBundleName = AssetBundleHelper.GetAssetBundleName(item.Key);
+                build.assetBundleName = ResourcePathHelper.GetAssetBundleName(item.Key);
                 build.assetNames = item.Value.ToArray();
                 assetBundleBuildList.Add(build);
             }

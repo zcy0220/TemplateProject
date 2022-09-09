@@ -13,7 +13,7 @@ namespace GameMain
         /// <summary>
         /// 是否开启热更新资源
         /// </summary>
-        public static bool IsOpenHotfixResource = true;
+        public static bool IsOpenHotfixResource = false;
         /// <summary>
         /// 热更新地址
         /// </summary>

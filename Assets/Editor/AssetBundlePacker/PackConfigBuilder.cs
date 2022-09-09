@@ -2,27 +2,13 @@
  * 包体配置文件构建
  */
 
-using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
+using GameUnityFramework.Resource;
+using Newtonsoft.Json;
 
 namespace Editor.AssetBundlePacker
 {
-    [Serializable]
-    public class PackConfig
-    {
-        /// <summary>
-        /// AssetPath -> AssetBundleName
-        /// </summary>
-        public Dictionary<string, string> DependencyDataDict = new Dictionary<string, string>();
-        /// <summary>
-        /// 把文件夹名和文件名映射成它对应的位置索引
-        /// 减少存储量
-        /// </summary>
-        public List<string> AllDirectoryAndFileNames = new List<string>();
-    }
-
     public class PackConfigBuilder
     {
         private PackConfig _packConfig = new PackConfig();
@@ -41,23 +27,23 @@ namespace Editor.AssetBundlePacker
                 if (item.Key.StartsWith(AssetBundleConfig.PackRootPath))
                 {
                     var assetPath = GetIndexFilePath(item.Key);
-                    var assetBundleName = AssetBundleHelper.GetAssetBundleName(item.Value.AssetBundleName);
+                    var assetBundleName = ResourcePathHelper.GetAssetBundleName(item.Value.AssetBundleName);
                     _packConfig.DependencyDataDict.Add(assetPath, assetBundleName);
                 }
             }
-            SavePackConfig(_packConfig);
+            SavePackConfig(AssetBundleConfig.PackConfigPath, _packConfig);
         }
 
         /// <summary>
         /// 保存依赖缓存
         /// </summary>
-        private void SavePackConfig(PackConfig config)
+        private void SavePackConfig(string configPath, PackConfig config)
         {
-            using (var fileStream = new FileStream(AssetBundleConfig.PackConfigPath, FileMode.OpenOrCreate))
-            {
-                var binaryFormatter = new BinaryFormatter();
-                binaryFormatter.Serialize(fileStream, config);
-            }
+            var buffer = JsonConvert.SerializeObject(config);
+            var fileInfo = new FileInfo(configPath);
+            var dirInfo = fileInfo.Directory;
+            if (!dirInfo.Exists) Directory.CreateDirectory(dirInfo.FullName);
+            File.WriteAllText(configPath, buffer);
         }
 
         /// <summary>

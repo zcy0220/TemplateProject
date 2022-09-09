@@ -37,15 +37,5 @@ namespace Editor.AssetBundlePacker
             }
             return true;
         }
-
-        /// <summary>
-        /// 根据路径获取对应的AssetBundle包名
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static string GetAssetBundleName(string path)
-        {
-            return path.Replace("/", "_").Replace(".", "_");
-        }
     }
 }

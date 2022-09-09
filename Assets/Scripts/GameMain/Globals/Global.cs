@@ -11,18 +11,48 @@ namespace GameMain
 {
     public class G
     {
-        #region EventManager
-        public static EventManager EventManager = new EventManager();
-        #endregion
-
         #region UIManager
-        public static UIManager UIManager = new UIManager();
+        private static UIManager _uiManager;
+        public static UIManager UIManager
+        {
+            get
+            {
+                if (_uiManager == null)
+                {
+                    _uiManager = new UIManager();
+                }
+                return _uiManager;
+            }
+        }
         #endregion
-
+        #region EventManager
+        private static EventManager _eventManager;
+        public static EventManager EventManager
+        {
+            get
+            {
+                if (_eventManager == null)
+                {
+                    _eventManager = new EventManager();
+                }
+                return _eventManager;
+            }
+        }
+        #endregion
         #region DataModuleManager
-        public static DataModuleManager DataModuleManager = new DataModuleManager();
+        private static DataModuleManager _dataModuleManager;
+        public static DataModuleManager DataModuleManager
+        {
+            get
+            {
+                if (_dataModuleManager == null)
+                {
+                    _dataModuleManager = new DataModuleManager();
+                }
+                return _dataModuleManager;
+            }
+        }
         #endregion
-
         #region UnityObjectManager
         public static UnityObjectManager _unityObjectManager;
         public static UnityObjectManager UnityObjectManager
@@ -31,7 +61,7 @@ namespace GameMain
             {
                 if (_unityObjectManager == null)
                 {
-                    _unityObjectManager = new UnityObjectManager("Assets/ArtPack/Pack");
+                    _unityObjectManager = new UnityObjectManager();
                 }
                 return _unityObjectManager;
             }
