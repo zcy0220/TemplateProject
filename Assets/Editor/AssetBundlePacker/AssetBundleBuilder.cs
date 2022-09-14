@@ -355,11 +355,9 @@ namespace Editor.AssetBundlePacker
                 assetBundleBuildList.Add(build);
             }
             var outputPath = AssetBundleConfig.AssetBundleExportPath;
-            FileUtil.DeleteFileOrDirectory(outputPath);
-            Directory.CreateDirectory(outputPath);
+            if (!Directory.Exists(outputPath)) Directory.CreateDirectory(outputPath);
 
             var options = BuildAssetBundleOptions.ChunkBasedCompression;
-            
             if (GameMain.GameConfig.AssetBundleEncryptkey.Length > 0)
             {
                 options |= BuildAssetBundleOptions.EnableProtection;

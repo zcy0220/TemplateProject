@@ -20,6 +20,6 @@ namespace Editor.AssetBundlePacker
         /// <summary>
         /// AssetBundle导出目录
         /// </summary>
-        public static readonly string AssetBundleExportPath = Path.Combine(Application.streamingAssetsPath, "assetbundles");
+        public static readonly string AssetBundleExportPath = Path.Combine("D:/Fork/TemplateProject/Builds/StreamingAssets", "assetbundles");
     }
 }
