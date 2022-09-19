@@ -62,7 +62,7 @@ namespace Editor.AssetBundlePacker
         /// <summary>
         /// 依赖缓存存储地址
         /// </summary>
-        private static string _dependenciesCachePath = Path.Combine(Application.dataPath, "Editor/AssetBundlePacker/DependenciesCache.txt");
+        private static string _dependenciesCachePath = Application.dataPath.Substring(0, Application.dataPath.Length - 6) + "Builds/AssetBundles/Caches/DependenciesCache.txt";
         
         /// <summary>
         /// 获取
@@ -339,13 +339,16 @@ namespace Editor.AssetBundlePacker
         /// </summary>
         private AllAssetsDependencies ReadDependenciesCache()
         {
-            using (var fileStream = new FileStream(_dependenciesCachePath, FileMode.OpenOrCreate))
+            if (GameUnityFramework.Utils.FileUtil.CheckFileAndCreateDirWhenNeeded(_dependenciesCachePath))
             {
-                if (fileStream.Length > 0)
+                using (var fileStream = new FileStream(_dependenciesCachePath, FileMode.OpenOrCreate))
                 {
-                    var binaryFormatter = new BinaryFormatter();
-                    var obj = binaryFormatter.Deserialize(fileStream);
-                    return obj as AllAssetsDependencies;
+                    if (fileStream.Length > 0)
+                    {
+                        var binaryFormatter = new BinaryFormatter();
+                        var obj = binaryFormatter.Deserialize(fileStream);
+                        return obj as AllAssetsDependencies;
+                    }
                 }
             }
             return new AllAssetsDependencies();
@@ -356,10 +359,13 @@ namespace Editor.AssetBundlePacker
         /// </summary>
         private void SaveDependenciesCache(AllAssetsDependencies cache)
         {
-            using (var fileStream = new FileStream(_dependenciesCachePath, FileMode.OpenOrCreate))
+            if (GameUnityFramework.Utils.FileUtil.CheckFileAndCreateDirWhenNeeded(_dependenciesCachePath))
             {
-                var binaryFormatter = new BinaryFormatter();
-                binaryFormatter.Serialize(fileStream, cache);
+                using (var fileStream = new FileStream(_dependenciesCachePath, FileMode.OpenOrCreate))
+                {
+                    var binaryFormatter = new BinaryFormatter();
+                    binaryFormatter.Serialize(fileStream, cache);
+                }
             }
         }
     }

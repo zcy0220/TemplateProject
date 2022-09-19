@@ -4,8 +4,10 @@
 
 using UnityEngine;
 using UnityEditor;
+using System;
 using System.IO;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using GameUnityFramework.Resource;
 
 namespace Editor.AssetBundlePacker
@@ -39,6 +41,30 @@ namespace Editor.AssetBundlePacker
         public List<string> BeDependencies;
     }
 
+    /// <summary>
+    /// AssetBundle相关信息
+    /// </summary>
+    [System.Serializable]
+    public class AssetBundleInfo
+    {
+        /// <summary>
+        /// AssetBundle包名
+        /// </summary>
+        public string AssetBundleName;
+        /// <summary>
+        /// AssetBundle大小
+        /// </summary>
+        public long AssetBundleSize;
+    }
+
+    /// <summary>
+    /// AssetBundle打包出来时记录一份列表
+    /// </summary>
+    public class AssetBundleInfoList
+    {
+        public List<AssetBundleInfo> List = new List<AssetBundleInfo>();
+    }
+
     public class AssetBundleBuilder
     {
         /// <summary>
@@ -60,6 +86,7 @@ namespace Editor.AssetBundlePacker
             GroupingAssetBundles();
             CreatePackConfig();
             BuildAssetBundles();
+            BuildAssetBundleInfoList();
         }
 
         /// <summary>
@@ -384,7 +411,6 @@ namespace Editor.AssetBundlePacker
             }
         }
 
-
         /// <summary>
         /// 清理多余的AssetBundles
         /// </summary>
@@ -408,6 +434,39 @@ namespace Editor.AssetBundlePacker
                 }
             }
             AssetDatabase.Refresh();
+        }
+
+        /// <summary>
+        /// 构建AssetBundle信息列表
+        /// </summary>
+        private static void BuildAssetBundleInfoList()
+        {
+            var assetBundleInfoList = new AssetBundleInfoList();
+            try
+            {
+                if (GameMain.GameConfig.AssetBundleEncryptkey.Length > 0)
+                {
+                    AssetBundle.SetAssetBundleDecryptKey(GameMain.GameConfig.AssetBundleEncryptkey);
+                }
+                var assetBundlePath = Path.Combine(AssetBundleConfig.AssetBundleExportPath, AssetBundleConfig.AssetBundleFolder);
+                var mainAssetBundle = AssetBundle.LoadFromFile(assetBundlePath);
+                var assetBundleManifest = mainAssetBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+                var allAssetBundles = assetBundleManifest.GetAllAssetBundles();
+                for (int i = 0; i < allAssetBundles.Length; i++)
+                {
+                    var assetBundleInfo = new AssetBundleInfo();
+                    assetBundleInfo.AssetBundleName = allAssetBundles[i];
+                    var path = Path.Combine(AssetBundleConfig.AssetBundleExportPath, assetBundleInfo.AssetBundleName);
+                    var fileInfo = new FileInfo(path);
+                    assetBundleInfo.AssetBundleSize = fileInfo.Length;
+                    assetBundleInfoList.List.Add(assetBundleInfo);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning(e.Message);
+            }
+            File.WriteAllText(AssetBundleConfig.AssetBundleInfoListExportPath, JsonUtility.ToJson(assetBundleInfoList, true));
         }
     }
 }

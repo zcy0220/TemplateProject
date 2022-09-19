@@ -6,8 +6,6 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
-using System;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Editor.AssetBundlePacker
 {
@@ -16,7 +14,7 @@ namespace Editor.AssetBundlePacker
         /// <summary>
         /// 构建测试AssetBundle
         /// </summary>
-        [MenuItem("Tools/AssetBundlePacker/Build")]
+        [MenuItem("Tools/AssetBundlePacker/BuildAssetBundles")]
         public static bool Build()
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
@@ -35,7 +33,7 @@ namespace Editor.AssetBundlePacker
 
             var allForcePacks = new string[]
             {
-                "Assets/ArtPack/Test",
+                //"Assets/ArtPack/Pack",
             };
 
             var dependenciesbuilder = new DependenciesBuilder();
@@ -54,7 +52,7 @@ namespace Editor.AssetBundlePacker
         /// <summary>
         /// 构建所有资源依赖
         /// </summary>
-        [MenuItem("Tools/AssetBundlePacker/Dependencies")]
+        [MenuItem("Tools/AssetBundlePacker/BuildAllDependencies")]
         public static void Dependencies()
         {
             var stopwatch = new System.Diagnostics.Stopwatch();

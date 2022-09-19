@@ -20,9 +20,3 @@
 
 # Builds
 /[Bb]uilds/
-
-# AssetBundlePacker
-/Assets/StreamingAssets/assetbundles
-Assets/StreamingAssets/assetbundles.meta
-Assets/Editor/AssetBundlePacker/DependenciesCache.txt
-Assets/Editor/AssetBundlePacker/DependenciesCache.txt.meta
