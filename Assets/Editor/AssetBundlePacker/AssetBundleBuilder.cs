@@ -419,7 +419,7 @@ namespace Editor.AssetBundlePacker
         {
             var assetBundleVersionConfig = new VersionConfig();
             var now = System.DateTime.Now;
-            assetBundleVersionConfig.Version = now.ToString("yyyyMMdd_HHmmss");
+            assetBundleVersionConfig.Version = now.ToString("yyyyMMddHHmmss");
             try
             {
                 if (GameMain.GameConfig.AssetBundleEncryptkey.Length > 0)

@@ -66,6 +66,9 @@ namespace GameMain
                     case EHotfixResourceStatus.EnterGame:
                         EnterGame();
                         break;
+                    case EHotfixResourceStatus.InitServerVersionError:
+                        EnterGame();
+                        break;
                 }
             };
             StartCoroutine(hotfixResourceManager.Startup(GameConfig.HotfixResourceAddress));
