@@ -3,15 +3,10 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
-using UnityEngine;
-using Editor.AssetBundlePacker;
 
 namespace Editor.BuildPacker
 {
@@ -47,6 +42,8 @@ namespace Editor.BuildPacker
                 EditorUserBuildSettings.development = isDebug;
             }
 
+            FileUtil.CopyFileOrDirectory(AssetBundlePacker.AssetBundleConfig.AssetBundlesStreamingAssetsPath, Application.streamingAssetsPath);
+
             AssetDatabase.Refresh();
 
             var options = BuildOptions.ShowBuiltPlayer | BuildOptions.DetailedBuildReport;
@@ -54,23 +51,25 @@ namespace Editor.BuildPacker
             {
                 options |= BuildOptions.Development;
             }
-            //if (isBuildAssetBundle)
-            //{
-            //    if (!AssetBundlePacker.Build())
-            //    {
-            //        LogUtil.Error($"Build {apkName} failed.");
-            //        return;
-            //    }
-            //}
-            //else
-            //{
-            //    LogUtil.Debug($"BuildOptions.BuildScriptsOnly");
-            //    options |= BuildOptions.BuildScriptsOnly;
-            //}
+
+            if (isBuildAssetBundle)
+            {
+                if (!AssetBundlePacker.AssetBundlePacker.Build())
+                {
+                    return;
+                }
+            }
+            else
+            {
+                options |= BuildOptions.BuildScriptsOnly;
+            }
 
             var apkName = PlayerSettings.productName + "_" + (isDebug ? "Debug" : "Release") + ".apk";
             var apkPath = Path.Combine("Builds/Android", apkName);
             var report = BuildPipeline.BuildPlayer(GetBuildScenes(), apkPath, BuildTarget.Android, options);
+
+            FileUtil.DeleteFileOrDirectory(Application.streamingAssetsPath + ".meta");
+            FileUtil.DeleteFileOrDirectory(Application.streamingAssetsPath);
             if (report.summary.result != BuildResult.Succeeded)
             {
                 Debug.LogError($"build apk ==> build {apkName} failed! build result:{report.summary.result}");

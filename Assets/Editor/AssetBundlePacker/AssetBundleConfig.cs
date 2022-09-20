@@ -22,13 +22,14 @@ namespace Editor.AssetBundlePacker
         /// </summary>
         public static readonly string ProjectPath = Application.dataPath.Substring(0, Application.dataPath.Length - 6);
         /// <summary>
+        /// 导出的AssetBundles等信息的路径
+        /// 打APK时再考到Unity的StreamingAssets路径下
+        /// </summary>
+        public static readonly string AssetBundlesStreamingAssetsPath = ProjectPath + "Builds/AssetBundles/StreamingAssets";
+        /// <summary>
         /// 版本配置信息导出路径
         /// </summary>
-        public static readonly string VersionConfigExportPath = ProjectPath + "Builds/AssetBundles/StreamingAssets/VersionConfig.json";
-        /// <summary>
-        /// AssetBundle信息列表导出路径
-        /// </summary>
-        public static readonly string AssetBundleInfoListExportPath = ProjectPath + "Builds/AssetBundles/StreamingAssets/AssetBundleInfoList.json";
+        public static readonly string VersionConfigExportPath = AssetBundlesStreamingAssetsPath + "/VersionConfig.json";
         /// <summary>
         /// AssetBundleFolder
         /// </summary>
@@ -36,6 +37,6 @@ namespace Editor.AssetBundlePacker
         /// <summary>
         /// AssetBundle导出目录
         /// </summary>
-        public static readonly string AssetBundleExportPath = ProjectPath + "Builds/AssetBundles/StreamingAssets/" + AssetBundleFolder;
+        public static readonly string AssetBundleExportPath = AssetBundlesStreamingAssetsPath + "/" + AssetBundleFolder;
     }
 }
