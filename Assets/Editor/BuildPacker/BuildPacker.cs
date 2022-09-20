@@ -58,10 +58,10 @@ namespace Editor.BuildPacker
                 {
                     return;
                 }
-            }
-            else
-            {
-                options |= BuildOptions.BuildScriptsOnly;
+            //}
+            //else
+            //{
+            //    options |= BuildOptions.BuildScriptsOnly;
             }
 
             var apkName = PlayerSettings.productName + "_" + (isDebug ? "Debug" : "Release") + ".apk";
