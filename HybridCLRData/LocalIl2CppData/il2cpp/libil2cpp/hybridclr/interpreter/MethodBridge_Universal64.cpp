@@ -8034,6 +8034,14 @@ static void __M2N_i8i8i1i8i8(const MethodInfo* method, uint16_t* argVarIndexs, S
 }
 
 
+// System.Byte[] UnityEngine.WWWTranscoder::Encode(System.Byte[],System.Byte,System.Byte[],System.Byte[],System.Boolean)
+static void __M2N_i8i8i1i8i8i1(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
+{
+    typedef int64_t (*NativeMethod)(int64_t __arg0, int8_t __arg1, int64_t __arg2, int64_t __arg3, int8_t __arg4, const MethodInfo* method);
+    *(int64_t*)ret = ((NativeMethod)(GetInterpreterDirectlyCallMethodPointer(method)))(*(int64_t*)(localVarBase+argVarIndexs[0]), *(int8_t*)(localVarBase+argVarIndexs[1]), *(int64_t*)(localVarBase+argVarIndexs[2]), *(int64_t*)(localVarBase+argVarIndexs[3]), *(int8_t*)(localVarBase+argVarIndexs[4]), method);
+}
+
+
 // System.IAsyncResult UnityEngine.Apple.ReplayKit.ReplayKit/BroadcastStatusCallback::BeginInvoke(System.Boolean,System.String,System.AsyncCallback,System.Object)
 static void __M2N_i8i8i1i8i8i8(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
 {
@@ -10271,6 +10279,14 @@ static void __M2N_i8i8S24(const MethodInfo* method, uint16_t* argVarIndexs, Stac
 {
     typedef int64_t (*NativeMethod)(int64_t __arg0, ValueTypeSize<24> __arg1, const MethodInfo* method);
     *(int64_t*)ret = ((NativeMethod)(GetInterpreterDirectlyCallMethodPointer(method)))(*(int64_t*)(localVarBase+argVarIndexs[0]), *(ValueTypeSize<24>*)(localVarBase+argVarIndexs[1]), method);
+}
+
+
+// UnityEngine.Networking.UnityWebRequest UnityEngine.Networking.UnityWebRequest::GetAssetBundle(System.String,UnityEngine.CachedAssetBundle,System.UInt32)
+static void __M2N_i8i8S24i4(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
+{
+    typedef int64_t (*NativeMethod)(int64_t __arg0, ValueTypeSize<24> __arg1, int32_t __arg2, const MethodInfo* method);
+    *(int64_t*)ret = ((NativeMethod)(GetInterpreterDirectlyCallMethodPointer(method)))(*(int64_t*)(localVarBase+argVarIndexs[0]), *(ValueTypeSize<24>*)(localVarBase+argVarIndexs[1]), *(int32_t*)(localVarBase+argVarIndexs[2]), method);
 }
 
 
@@ -22930,6 +22946,14 @@ static void __M2N_vi8i8S24(const MethodInfo* method, uint16_t* argVarIndexs, Sta
 }
 
 
+// System.Void UnityEngine.Networking.DownloadHandlerAssetBundle::.ctor(System.String,UnityEngine.CachedAssetBundle,System.UInt32)
+static void __M2N_vi8i8S24i4(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
+{
+    typedef void (*NativeMethod)(int64_t __arg0, int64_t __arg1, ValueTypeSize<24> __arg2, int32_t __arg3, const MethodInfo* method);
+    ((NativeMethod)(GetInterpreterDirectlyCallMethodPointer(method)))(*(int64_t*)(localVarBase+argVarIndexs[0]), *(int64_t*)(localVarBase+argVarIndexs[1]), *(ValueTypeSize<24>*)(localVarBase+argVarIndexs[2]), *(int32_t*)(localVarBase+argVarIndexs[3]), method);
+}
+
+
 // System.Void UnityEngine.UIElements.UIR.Allocator2D/Alloc2D::.ctor(UnityEngine.UIElements.UIR.Allocator2D/Row,UnityEngine.UIElements.UIR.Alloc,System.Int32,System.Int32)
 static void __M2N_vi8i8S24i4i4(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
 {
@@ -27639,6 +27663,7 @@ Managed2NativeMethodInfo hybridclr::interpreter::g_managed2nativeStub[] =
 	{"i8i8i1i8", __M2N_i8i8i1i8},
 	{"i8i8i1i8i1", __M2N_i8i8i1i8i1},
 	{"i8i8i1i8i8", __M2N_i8i8i1i8i8},
+	{"i8i8i1i8i8i1", __M2N_i8i8i1i8i8i1},
 	{"i8i8i1i8i8i8", __M2N_i8i8i1i8i8i8},
 	{"i8i8i1i8i8i8i8", __M2N_i8i8i1i8i8i8i8},
 	{"i8i8i1i8S8", __M2N_i8i8i1i8S8},
@@ -27919,6 +27944,7 @@ Managed2NativeMethodInfo hybridclr::interpreter::g_managed2nativeStub[] =
 	{"i8i8S16S8r4i4i4S16i1", __M2N_i8i8S16S8r4i4i4S16i1},
 	{"i8i8S20S8", __M2N_i8i8S20S8},
 	{"i8i8S24", __M2N_i8i8S24},
+	{"i8i8S24i4", __M2N_i8i8S24i4},
 	{"i8i8S24i8", __M2N_i8i8S24i8},
 	{"i8i8S24i8r4i4i8i8", __M2N_i8i8S24i8r4i4i8i8},
 	{"i8i8S24i8S8i4", __M2N_i8i8S24i8S8i4},
@@ -29501,6 +29527,7 @@ Managed2NativeMethodInfo hybridclr::interpreter::g_managed2nativeStub[] =
 	{"vi8i8S16S8i1S16", __M2N_vi8i8S16S8i1S16},
 	{"vi8i8S1i8", __M2N_vi8i8S1i8},
 	{"vi8i8S24", __M2N_vi8i8S24},
+	{"vi8i8S24i4", __M2N_vi8i8S24i4},
 	{"vi8i8S24i4i4", __M2N_vi8i8S24i4i4},
 	{"vi8i8S24S16i1", __M2N_vi8i8S24S16i1},
 	{"vi8i8S32i8", __M2N_vi8i8S32i8},

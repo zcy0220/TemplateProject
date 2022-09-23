@@ -15,7 +15,7 @@ public class GameLauncher
 #if !UNITY_EDITOR
         LoadMetadataForAOTAssembly();
 #endif
-        Debug.Log("正式开始游戏123");
+        Debug.Log("正式开始游戏");
     }
 
     /// <summary>

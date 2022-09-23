@@ -6746,6 +6746,14 @@ static void __M2N_i8i8i1i8i8(const MethodInfo* method, uint16_t* argVarIndexs, S
 }
 
 
+// System.Byte[] UnityEngine.WWWTranscoder::Encode(System.Byte[],System.Byte,System.Byte[],System.Byte[],System.Boolean)
+static void __M2N_i8i8i1i8i8i1(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
+{
+    typedef int64_t (*NativeMethod)(int64_t __arg0, int8_t __arg1, int64_t __arg2, int64_t __arg3, int8_t __arg4, const MethodInfo* method);
+    *(int64_t*)ret = ((NativeMethod)(GetInterpreterDirectlyCallMethodPointer(method)))(*(int64_t*)(localVarBase+argVarIndexs[0]), *(int8_t*)(localVarBase+argVarIndexs[1]), *(int64_t*)(localVarBase+argVarIndexs[2]), *(int64_t*)(localVarBase+argVarIndexs[3]), *(int8_t*)(localVarBase+argVarIndexs[4]), method);
+}
+
+
 // System.IAsyncResult UnityEngine.Apple.ReplayKit.ReplayKit/BroadcastStatusCallback::BeginInvoke(System.Boolean,System.String,System.AsyncCallback,System.Object)
 static void __M2N_i8i8i1i8i8i8(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
 {
@@ -8551,6 +8559,14 @@ static void __M2N_i8i8sr(const MethodInfo* method, uint16_t* argVarIndexs, Stack
 {
     typedef int64_t (*NativeMethod)(int64_t __arg0, uint64_t __arg1, const MethodInfo* method);
     *(int64_t*)ret = ((NativeMethod)(GetInterpreterDirectlyCallMethodPointer(method)))(*(int64_t*)(localVarBase+argVarIndexs[0]), (uint64_t)(localVarBase+argVarIndexs[1]), method);
+}
+
+
+// UnityEngine.Networking.UnityWebRequest UnityEngine.Networking.UnityWebRequest::GetAssetBundle(System.String,UnityEngine.CachedAssetBundle,System.UInt32)
+static void __M2N_i8i8sri4(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
+{
+    typedef int64_t (*NativeMethod)(int64_t __arg0, uint64_t __arg1, int32_t __arg2, const MethodInfo* method);
+    *(int64_t*)ret = ((NativeMethod)(GetInterpreterDirectlyCallMethodPointer(method)))(*(int64_t*)(localVarBase+argVarIndexs[0]), (uint64_t)(localVarBase+argVarIndexs[1]), *(int32_t*)(localVarBase+argVarIndexs[2]), method);
 }
 
 
@@ -22326,6 +22342,7 @@ Managed2NativeMethodInfo hybridclr::interpreter::g_managed2nativeStub[] =
 	{"i8i8i1i8", __M2N_i8i8i1i8},
 	{"i8i8i1i8i1", __M2N_i8i8i1i8i1},
 	{"i8i8i1i8i8", __M2N_i8i8i1i8i8},
+	{"i8i8i1i8i8i1", __M2N_i8i8i1i8i8i1},
 	{"i8i8i1i8i8i8", __M2N_i8i8i1i8i8i8},
 	{"i8i8i1i8i8i8i8", __M2N_i8i8i1i8i8i8i8},
 	{"i8i8i2", __M2N_i8i8i2},
@@ -22552,6 +22569,7 @@ Managed2NativeMethodInfo hybridclr::interpreter::g_managed2nativeStub[] =
 	{"i8i8r8i8i8i8", __M2N_i8i8r8i8i8i8},
 	{"i8i8r8r8", __M2N_i8i8r8r8},
 	{"i8i8sr", __M2N_i8i8sr},
+	{"i8i8sri4", __M2N_i8i8sri4},
 	{"i8i8sri8", __M2N_i8i8sri8},
 	{"i8i8sri8i8", __M2N_i8i8sri8i8},
 	{"i8i8sri8i8i4", __M2N_i8i8sri8i8i4},

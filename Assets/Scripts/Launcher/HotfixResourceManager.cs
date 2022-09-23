@@ -248,6 +248,7 @@ public class HotfixResourceManager : MonoBehaviour
             }
             uwr.Dispose();
         }
+        Debug.Log($"channel:{channel}");
     }
 
     /// <summary>

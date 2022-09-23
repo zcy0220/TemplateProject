@@ -5194,6 +5194,14 @@ static void __M2N_i4i4i1i4i4(const MethodInfo* method, uint16_t* argVarIndexs, S
 }
 
 
+// System.Byte[] UnityEngine.WWWTranscoder::Encode(System.Byte[],System.Byte,System.Byte[],System.Byte[],System.Boolean)
+static void __M2N_i4i4i1i4i4i1(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
+{
+    typedef int32_t (*NativeMethod)(int32_t __arg0, int8_t __arg1, int32_t __arg2, int32_t __arg3, int8_t __arg4, const MethodInfo* method);
+    *(int32_t*)ret = ((NativeMethod)(GetInterpreterDirectlyCallMethodPointer(method)))(*(int32_t*)(localVarBase+argVarIndexs[0]), *(int8_t*)(localVarBase+argVarIndexs[1]), *(int32_t*)(localVarBase+argVarIndexs[2]), *(int32_t*)(localVarBase+argVarIndexs[3]), *(int8_t*)(localVarBase+argVarIndexs[4]), method);
+}
+
+
 // System.Int32 UnityEngine.CullingGroup::QueryIndices(System.Boolean,System.Int32,System.Int32[],System.Int32)
 static void __M2N_i4i4i1i4i4i4(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
 {
@@ -16050,6 +16058,14 @@ static void __M2N_vi4i4C24i1(const MethodInfo* method, uint16_t* argVarIndexs, S
 }
 
 
+// System.Void UnityEngine.Networking.DownloadHandlerAssetBundle::.ctor(System.String,UnityEngine.CachedAssetBundle,System.UInt32)
+static void __M2N_vi4i4C24i4(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
+{
+    typedef void (*NativeMethod)(int32_t __arg0, int32_t __arg1, ValueTypeSizeAlign8<24> __arg2, int32_t __arg3, const MethodInfo* method);
+    ((NativeMethod)(GetInterpreterDirectlyCallMethodPointer(method)))(*(int32_t*)(localVarBase+argVarIndexs[0]), *(int32_t*)(localVarBase+argVarIndexs[1]), *(ValueTypeSizeAlign8<24>*)(localVarBase+argVarIndexs[2]), *(int32_t*)(localVarBase+argVarIndexs[3]), method);
+}
+
+
 // System.Void System.Collections.Generic.Dictionary`2::set_Item(TKey,TValue)
 static void __M2N_vi4i4C32(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
 {
@@ -16375,6 +16391,14 @@ static void __M2N_vi4i4i4C16(const MethodInfo* method, uint16_t* argVarIndexs, S
 {
     typedef void (*NativeMethod)(int32_t __arg0, int32_t __arg1, int32_t __arg2, ValueTypeSizeAlign8<16> __arg3, const MethodInfo* method);
     ((NativeMethod)(GetInterpreterDirectlyCallMethodPointer(method)))(*(int32_t*)(localVarBase+argVarIndexs[0]), *(int32_t*)(localVarBase+argVarIndexs[1]), *(int32_t*)(localVarBase+argVarIndexs[2]), *(ValueTypeSizeAlign8<16>*)(localVarBase+argVarIndexs[3]), method);
+}
+
+
+// System.Void UnityEngine.Networking.DownloadHandlerAssetBundle::.ctor(System.String,System.String,UnityEngine.Hash128,System.UInt32)
+static void __M2N_vi4i4i4C16i4(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
+{
+    typedef void (*NativeMethod)(int32_t __arg0, int32_t __arg1, int32_t __arg2, ValueTypeSizeAlign8<16> __arg3, int32_t __arg4, const MethodInfo* method);
+    ((NativeMethod)(GetInterpreterDirectlyCallMethodPointer(method)))(*(int32_t*)(localVarBase+argVarIndexs[0]), *(int32_t*)(localVarBase+argVarIndexs[1]), *(int32_t*)(localVarBase+argVarIndexs[2]), *(ValueTypeSizeAlign8<16>*)(localVarBase+argVarIndexs[3]), *(int32_t*)(localVarBase+argVarIndexs[4]), method);
 }
 
 
@@ -22684,6 +22708,7 @@ Managed2NativeMethodInfo hybridclr::interpreter::g_managed2nativeStub[] =
 	{"i4i4i1i4C8", __M2N_i4i4i1i4C8},
 	{"i4i4i1i4i1", __M2N_i4i4i1i4i1},
 	{"i4i4i1i4i4", __M2N_i4i4i1i4i4},
+	{"i4i4i1i4i4i1", __M2N_i4i4i1i4i4i1},
 	{"i4i4i1i4i4i4", __M2N_i4i4i1i4i4i4},
 	{"i4i4i1i4i4i4i4", __M2N_i4i4i1i4i4i4i4},
 	{"i4i4i1i4i4i4i4i4i4i4i4i1i4", __M2N_i4i4i1i4i4i4i4i4i4i4i4i1i4},
@@ -24041,6 +24066,7 @@ Managed2NativeMethodInfo hybridclr::interpreter::g_managed2nativeStub[] =
 	{"vi4i4C24", __M2N_vi4i4C24},
 	{"vi4i4C24C24", __M2N_vi4i4C24C24},
 	{"vi4i4C24i1", __M2N_vi4i4C24i1},
+	{"vi4i4C24i4", __M2N_vi4i4C24i4},
 	{"vi4i4C32", __M2N_vi4i4C32},
 	{"vi4i4C32S112", __M2N_vi4i4C32S112},
 	{"vi4i4C32S16", __M2N_vi4i4C32S16},
@@ -24082,6 +24108,7 @@ Managed2NativeMethodInfo hybridclr::interpreter::g_managed2nativeStub[] =
 	{"vi4i4i2i4i4", __M2N_vi4i4i2i4i4},
 	{"vi4i4i4", __M2N_vi4i4i4},
 	{"vi4i4i4C16", __M2N_vi4i4i4C16},
+	{"vi4i4i4C16i4", __M2N_vi4i4i4C16i4},
 	{"vi4i4i4C24", __M2N_vi4i4i4C24},
 	{"vi4i4i4C32S112", __M2N_vi4i4i4C32S112},
 	{"vi4i4i4C32S16", __M2N_vi4i4i4C32S16},
