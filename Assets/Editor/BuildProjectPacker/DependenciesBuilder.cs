@@ -340,7 +340,8 @@ namespace Editor.BuildProjectPacker
         /// </summary>
         private AllAssetsDependencies ReadDependenciesCache()
         {
-            if (GameUnityFramework.Utils.FileUtil.CheckFileAndCreateDirWhenNeeded(_dependenciesCachePath))
+            var dirPath = Directory.GetParent(_dependenciesCachePath).ToString();
+            if (Directory.Exists(dirPath))
             {
                 using (var fileStream = new FileStream(_dependenciesCachePath, FileMode.OpenOrCreate))
                 {
@@ -360,13 +361,12 @@ namespace Editor.BuildProjectPacker
         /// </summary>
         private void SaveDependenciesCache(AllAssetsDependencies cache)
         {
-            if (GameUnityFramework.Utils.FileUtil.CheckFileAndCreateDirWhenNeeded(_dependenciesCachePath))
+            var dirPath = Directory.GetParent(_dependenciesCachePath).ToString();
+            Directory.CreateDirectory(dirPath);
+            using (var fileStream = new FileStream(_dependenciesCachePath, FileMode.OpenOrCreate))
             {
-                using (var fileStream = new FileStream(_dependenciesCachePath, FileMode.OpenOrCreate))
-                {
-                    var binaryFormatter = new BinaryFormatter();
-                    binaryFormatter.Serialize(fileStream, cache);
-                }
+                var binaryFormatter = new BinaryFormatter();
+                binaryFormatter.Serialize(fileStream, cache);
             }
         }
     }
