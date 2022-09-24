@@ -257,7 +257,9 @@ public class HotfixResourceManager : MonoBehaviour
     private string GetStreamingAssetsFilePath(string filePath)
     {
         var path = $"{Application.streamingAssetsPath}/{filePath}";
+#if !UNITY_EDITOR
         if (!path.Contains("://")) path = "file://" + path;
+#endif
         return path;
     }
 

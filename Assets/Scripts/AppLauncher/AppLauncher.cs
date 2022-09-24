@@ -40,8 +40,8 @@ public class AppLauncher : MonoBehaviour
         Debug.Log("app launcher ==> enter game");
         DllAssetBundle = dllAssetBundle;
         var dllBytes = dllAssetBundle.LoadAsset<TextAsset>("Assembly-CSharp.dll.bytes");
-        var gameMainAssembly = System.Reflection.Assembly.Load(dllBytes.bytes);
-        var gameLauncherType = gameMainAssembly.GetType("GameLauncher");
+        var gameAssembly = System.Reflection.Assembly.Load(dllBytes.bytes);
+        var gameLauncherType = gameAssembly.GetType("GameLauncher");
         var startMethod = gameLauncherType.GetMethod("Start");
         startMethod.Invoke(null, null);
     }

@@ -15,6 +15,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	{
 		// System.Object UnityEngine.AssetBundle::LoadAsset<System.Object>(System.String)
 		// System.Object UnityEngine.Component::GetComponent<System.Object>()
+		// System.Object UnityEngine.GameObject::AddComponent<System.Object>()
 		// System.Object UnityEngine.Object::Instantiate<System.Object>(System.Object,UnityEngine.Transform)
 		// System.Object UnityEngine.Resources::Load<System.Object>(System.String)
 	}

@@ -5,6 +5,8 @@
 using UnityEngine;
 using HybridCLR;
 using System;
+using GameUnityFramework.Resource;
+
 public class GameLauncher
 {
     /// <summary>
@@ -15,7 +17,15 @@ public class GameLauncher
 #if !UNITY_EDITOR
         LoadMetadataForAOTAssembly();
 #endif
-        Debug.Log("正式开始游戏");
+        var dllBytes = AppLauncher.DllAssetBundle.LoadAsset<TextAsset>("GameMain.dll.bytes");
+        var gameMainAssembly = System.Reflection.Assembly.Load(dllBytes.bytes);
+        if (gameMainAssembly != null)
+        {
+            var mainEntranceType = gameMainAssembly.GetType("GameMain.MainEntrance");
+            var mainEntrance = new GameObject("MainEntrance");
+            mainEntrance.AddComponent(mainEntranceType);
+            GameObject.DontDestroyOnLoad(mainEntrance);
+        }
     }
 
     /// <summary>
