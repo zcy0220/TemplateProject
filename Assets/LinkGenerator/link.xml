@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <linker>
+  <assembly fullname="AppLauncher">
+    <type fullname="AppLauncher" preserve="all" />
+    <type fullname="HotUpdateAssemblyManifest" preserve="all" />
+  </assembly>
   <assembly fullname="GameBaseFramework">
     <type fullname="GameBaseFramework.Base.DataValue`1" preserve="all" />
     <type fullname="GameBaseFramework.Event.EventManager" preserve="all" />
@@ -10,10 +14,6 @@
   <assembly fullname="HybridCLR.Runtime">
     <type fullname="HybridCLR.LoadImageErrorCode" preserve="all" />
     <type fullname="HybridCLR.RuntimeApi" preserve="all" />
-  </assembly>
-  <assembly fullname="Launcher">
-    <type fullname="AppLauncher" preserve="all" />
-    <type fullname="HotUpdateAssemblyManifest" preserve="all" />
   </assembly>
   <assembly fullname="mscorlib">
     <type fullname="System.Action`1" preserve="all" />
