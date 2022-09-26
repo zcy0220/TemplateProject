@@ -49,10 +49,14 @@ namespace Editor.BuildProjectPacker
         /// <returns></returns>
         private static List<string> GetAllForcePacks()
         {
-            var allForcePacks = new List<string>()
+            var allForcePacks = new List<string>();
+            var path = BuildProjectConfig.ForcePackAssetConfig;
+            if (File.Exists(path))
             {
-                //"Assets/ArtPack/Pack"
-            };
+                var text = File.ReadAllText(path);
+                var config = JsonUtility.FromJson<ForcePackAssetList>(text);
+                allForcePacks = config.List;
+            }
             return allForcePacks;
         }
 

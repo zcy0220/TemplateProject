@@ -15,7 +15,7 @@ namespace Editor.BuildProjectPacker
         AllAssetBundle,
         OnlyScriptAssetBundle,
         OnlyResourceAssetBundle,
-        NodeAssetBundle
+        NoAssetBundle
     }
 
     public class BuildProjectPacker : EditorWindow
@@ -76,6 +76,19 @@ namespace Editor.BuildProjectPacker
 
             _assetBundleType = (EBuildAssetBundle)EditorGUILayout.EnumPopup("AssetBundleType", _assetBundleType);
 
+            //AssetBundle构建相关
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("AssetBundleBuild", GUILayout.Width(147));
+            if (GUILayout.Button("ForcePackConfig", GUILayout.Height(20), GUILayout.Width(200)))
+            {
+                ForcePackAssetBuilder.Open();
+            }
+            if (GUILayout.Button("Build", GUILayout.Height(20)))
+            {
+                BuildAssetBundle();
+            }
+            GUILayout.EndHorizontal();
+
             //选择Debug、OnlyScriptAssetBundle、OnlyResourceAssetBundle
             GUILayout.BeginHorizontal();
             _isDebug = GUILayout.Toggle(_isDebug, "Debug", GUILayout.Width(149));
@@ -83,10 +96,7 @@ namespace Editor.BuildProjectPacker
 
             //构建按钮
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("BuildAssetBundle", GUILayout.Height(30)))
-            {
-                BuildAssetBundle();
-            }
+            
             if (GUILayout.Button("BuildPackage", GUILayout.Height(30)))
             {
                 Build();

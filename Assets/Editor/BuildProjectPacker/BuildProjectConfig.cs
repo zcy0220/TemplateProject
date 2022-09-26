@@ -54,5 +54,9 @@ namespace Editor.BuildProjectPacker
         /// 资源路径和AssetBundle映射表
         /// </summary>
         public static readonly string PackConfigPath = PackRootPath + "/PackConfig.txt";
+        /// <summary>
+        /// 需要强制打成一个包的配置文件
+        /// </summary>
+        public static string ForcePackAssetConfig = Path.Combine(ProjectBuildPath, "AssetBundleCaches/ForcePackAssetConfig.json");
     }
 }

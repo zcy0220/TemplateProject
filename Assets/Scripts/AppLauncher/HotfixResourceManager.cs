@@ -20,7 +20,7 @@ public class AssetBundleResourceInfo
     /// </summary>
     public string Name;
     /// <summary>
-    /// AssetBundle大小(KB)
+    /// AssetBundle大小(B)
     /// </summary>
     public long Size;
 }
@@ -180,8 +180,8 @@ public class HotfixResourceManager : MonoBehaviour
         }
         else
         {
-            var complete = (1.0f * completeDownloadSize / 1024).ToString("F2");
-            var total = (1.0f * totalDownloadSize / 1024).ToString("F2");
+            var complete = (completeDownloadSize / 1024 / 1024 * 1.0f).ToString("F2");
+            var total = (totalDownloadSize / 1024 / 1024 * 1.0f).ToString("F2");
             Debug.Log($"{complete}M/{total}M");
             TextTips.text = $"下载资源({complete}M/{total}M)";
         }
@@ -216,7 +216,7 @@ public class HotfixResourceManager : MonoBehaviour
     private IEnumerator InitHotfixResourceAddress()
     {
         var localChannelConfigPath = GetStreamingAssetsFilePath(AppConfig.LocalChannelConfig);
-        var channel = "";
+        var channel = "default";
         using (var uwr = new UnityWebRequest(localChannelConfigPath))
         {
             uwr.downloadHandler = new DownloadHandlerBuffer();
@@ -408,6 +408,7 @@ public class HotfixResourceManager : MonoBehaviour
     /// </summary>
     private IEnumerator CompareResources()
     {
+        Directory.CreateDirectory($"{Application.persistentDataPath}/{AssetBundlesFolder}");
         var localAllAssetBundlesDict = new Dictionary<string, Hash128>();
         var manifestAssetBundlePath = PathCombine(AssetBundlesFolder, AssetBundlesFolder);
 
@@ -478,8 +479,8 @@ public class HotfixResourceManager : MonoBehaviour
                     SetProgress(_completeDownloadSize, _totalDownloadSize);
                 }
             }
+            uwr.downloadHandler.Dispose();
             uwr.Dispose();
-            UnityWebRequest.ClearCookieCache();
         }
         _status = EHotfixResourceStatus.StartHotfix;
     }
@@ -529,90 +530,6 @@ public class HotfixResourceManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 替换本地的资源
-    /// </summary>
-    private void ReplaceLocalResource(string assetBundleName, byte[] data)
-    {
-        try
-        {
-            Directory.CreateDirectory($"{Application.persistentDataPath}/{AssetBundlesFolder}");
-            var assetBundlePath = AssetBundlesFolder + "/" + assetBundleName;
-            var path = GetPresistentDataFilePath(assetBundlePath);
-            File.WriteAllBytes(path, data);
-            if (_completeDownloadStreamWriter == null)
-            {
-                var completeDownloadFilePath = GetPresistentDataFilePath(AssetBundleCompleteDownloadFile);
-                _completeDownloadStreamWriter = new StreamWriter(completeDownloadFilePath, true);
-            }
-            _completeDownloadStreamWriter.Write(assetBundleName + ",");
-            _completeDownloadStreamWriter.Flush();
-            if (!_completeDownloadList.Contains(assetBundleName))
-            {
-                _completeDownloadList.Add(assetBundleName);
-            }
-            if (_assetBundleInfoDict.TryGetValue(assetBundleName, out var assetBundleInfo))
-            {
-                _completeDownloadSize += assetBundleInfo.Size;
-            }
-            SetProgress(_completeDownloadSize, _totalDownloadSize);
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError(e.Message);
-        }
-    }
-
-    ///// <summary>
-    ///// 检测文件并创建对应文件夹
-    ///// </summary>
-    //public static bool CheckFileAndCreateDirWhenNeeded(string filePath)
-    //{
-    //    if (string.IsNullOrEmpty(filePath)) return false;
-    //    var fileInfo = new FileInfo(filePath);
-    //    var dirInfo = fileInfo.Directory;
-    //    if (!dirInfo.Exists) Directory.CreateDirectory(dirInfo.FullName);
-    //    return true;
-    //}
-
-    ///// <summary>
-    ///// WriteAllText.
-    ///// </summary>
-    //private bool WriteAllText(string outFile, string outText)
-    //{
-    //    try
-    //    {
-    //        if (!CheckFileAndCreateDirWhenNeeded(outFile)) return false;
-    //        if (File.Exists(outFile)) File.SetAttributes(outFile, FileAttributes.Normal);
-    //        File.WriteAllText(outFile, outText);
-    //        return true;
-    //    }
-    //    catch (System.Exception e)
-    //    {
-    //        Debug.LogError($"WriteAllText failed! path = {outFile} with err = {e.Message}");
-    //        return false;
-    //    }
-    //}
-
-    ///// <summary>
-    ///// WriteAllBytes
-    ///// </summary>
-    //private bool WriteAllBytes(string outFile, byte[] outBytes)
-    //{
-    //    try
-    //    {
-    //        if (!CheckFileAndCreateDirWhenNeeded(outFile)) return false;
-    //        if (File.Exists(outFile)) File.SetAttributes(outFile, FileAttributes.Normal);
-    //        File.WriteAllBytes(outFile, outBytes);
-    //        return true;
-    //    }
-    //    catch (System.Exception e)
-    //    {
-    //        Debug.LogError($"WriteAllBytes failed! path = {outFile} with err = {e.Message}");
-    //        return false;
-    //    }
-    //}
-
-    /// <summary>
     /// 检测下载队列
     /// </summary>
     private void Update()
@@ -641,15 +558,33 @@ public class HotfixResourceManager : MonoBehaviour
     private IEnumerator DownloadAssetBundle(string assetBundleName)
     {
         var url = GetServerAssetURL(PathCombine(AssetBundlesFolder, assetBundleName));
-        using (var uwr = new UnityWebRequest(url))
+        using (var uwr = UnityWebRequest.Get(url))
         {
-            uwr.downloadHandler = new DownloadHandlerBuffer();
-            uwr.timeout = 30;
-            uwr.disposeDownloadHandlerOnDispose = true;
+            var assetBundlePath = PathCombine(AssetBundlesFolder, assetBundleName);
+            var filePath = GetPresistentDataFilePath(assetBundlePath);
+            var downloadHandler = new DownloadHandlerFileRange(filePath);
+            uwr.downloadHandler = downloadHandler;
+            uwr.SetRequestHeader("range", $"bytes={downloadHandler.CurrentLength}-");
+            uwr.timeout = 10;
             yield return uwr.SendWebRequest();
             if (uwr.result == UnityWebRequest.Result.Success)
             {
-                ReplaceLocalResource(assetBundleName, uwr.downloadHandler.data);
+                if (_completeDownloadStreamWriter == null)
+                {
+                    var completeDownloadFilePath = GetPresistentDataFilePath(AssetBundleCompleteDownloadFile);
+                    _completeDownloadStreamWriter = new StreamWriter(completeDownloadFilePath, true);
+                }
+                _completeDownloadStreamWriter.Write(assetBundleName + ",");
+                _completeDownloadStreamWriter.Flush();
+                if (!_completeDownloadList.Contains(assetBundleName))
+                {
+                    _completeDownloadList.Add(assetBundleName);
+                }
+                if (_assetBundleInfoDict.TryGetValue(assetBundleName, out var assetBundleInfo))
+                {
+                    _completeDownloadSize += assetBundleInfo.Size;
+                }
+                SetProgress(_completeDownloadSize, _totalDownloadSize);
             }
             else
             {
@@ -657,8 +592,8 @@ public class HotfixResourceManager : MonoBehaviour
                 _needDownloadQueue.Enqueue(assetBundleName);
                 Debug.LogError($"assetbundle name:{assetBundleName} {uwr.error}");
             }
+            uwr.downloadHandler.Dispose();
             uwr.Dispose();
-            UnityWebRequest.ClearCookieCache();
             _loadingAssetBundleCount--;
         }
     }
@@ -671,14 +606,13 @@ public class HotfixResourceManager : MonoBehaviour
     {
         if (_completeDownloadStreamWriter != null) _completeDownloadStreamWriter.Close();
         File.Delete(GetPresistentDataFilePath(AssetBundleCompleteDownloadFile));
-
         var assetBundlePath = PathCombine(AssetBundlesFolder, AssetBundlesFolder);
         var url = GetServerAssetURL(assetBundlePath);
         using (var uwr = new UnityWebRequest(url))
         {
             uwr.downloadHandler = new DownloadHandlerBuffer();
-            uwr.timeout = 30;
             uwr.disposeDownloadHandlerOnDispose = true;
+            uwr.timeout = 10;
             yield return uwr.SendWebRequest();
             if (uwr.result == UnityWebRequest.Result.Success)
             {

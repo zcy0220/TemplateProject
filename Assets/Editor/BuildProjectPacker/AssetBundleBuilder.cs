@@ -489,7 +489,7 @@ namespace Editor.BuildProjectPacker
             assetBundleInfo.Name = assetBundleName;
             var path = Path.Combine(BuildProjectConfig.AssetBundleOutputPath, assetBundleInfo.Name);
             var fileInfo = new FileInfo(path);
-            assetBundleInfo.Size = fileInfo.Length / 1024L;
+            assetBundleInfo.Size = fileInfo.Length;
             return assetBundleInfo;
         }
 
@@ -550,10 +550,5 @@ namespace Editor.BuildProjectPacker
             }
             AssetDatabase.Refresh();
         }
-
-
-
-        ///==========================================================================================
-
     }
 }
