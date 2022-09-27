@@ -135,7 +135,9 @@ namespace Editor.BuildProjectPacker
         /// </summary>
         private void BuildAssetBundle(bool isOpenURL = false)
         {
-            switch(_assetBundleType)
+            FileUtil.DeleteFileOrDirectory(Application.streamingAssetsPath + ".meta");
+            FileUtil.DeleteFileOrDirectory(Application.streamingAssetsPath);
+            switch (_assetBundleType)
             {
                 case EBuildAssetBundle.AllAssetBundle:
                     AssetBundlePacker.BuildAllAssetBundles(_target);
@@ -146,6 +148,10 @@ namespace Editor.BuildProjectPacker
                 case EBuildAssetBundle.OnlyResourceAssetBundle:
                     AssetBundlePacker.BuildResourceAssetBundles(_target);
                     break;
+            }
+            if (_assetBundleType != EBuildAssetBundle.NoAssetBundle)
+            {
+                FileUtil.CopyFileOrDirectory(BuildProjectConfig.ProjectBuildStreamingAssetsPath, Application.streamingAssetsPath);
             }
 #if UNITY_EDITOR
             if (isOpenURL)
@@ -195,12 +201,15 @@ namespace Editor.BuildProjectPacker
             BuildPipeline.BuildPlayer(buildPlayerOptions);
             BuildChannelConfig();
             BuildAssetBundle();
-            FileUtil.DeleteFileOrDirectory(Application.streamingAssetsPath + ".meta");
-            FileUtil.DeleteFileOrDirectory(Application.streamingAssetsPath);
-            FileUtil.CopyFileOrDirectory(BuildProjectConfig.ProjectBuildStreamingAssetsPath, Application.streamingAssetsPath);
             Debug.Log("build apk ==> 第2次打包");
             var report = BuildPipeline.BuildPlayer(buildPlayerOptions);
-            if (report.summary.result != BuildResult.Succeeded)
+            if (report.summary.result == BuildResult.Succeeded)
+            {
+#if UNITY_EDITOR
+                Application.OpenURL($"file:///{outputPath}");
+#endif
+            }
+            else
             {
                 Debug.LogError($"build apk ==> build {apkName} failed! build result:{report.summary.result}");
             }
