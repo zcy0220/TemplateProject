@@ -181,8 +181,8 @@ public class HotfixResourceManager : MonoBehaviour
         }
         else
         {
-            var complete = (completeDownloadSize / 1024 / 1024 * 1.0f).ToString("F2");
-            var total = (totalDownloadSize / 1024 / 1024 * 1.0f).ToString("F2");
+            var complete = (completeDownloadSize / 1024L * 1.0f / 1024 ).ToString("F2");
+            var total = (totalDownloadSize / 1024L * 1.0f / 1024 ).ToString("F2");
             Debug.Log($"{complete}M/{total}M");
             TextTips.text = $"下载资源({complete}M/{total}M)";
         }
@@ -568,7 +568,6 @@ public class HotfixResourceManager : MonoBehaviour
             var downloadHandler = new DownloadHandlerFileRange(filePath);
             uwr.downloadHandler = downloadHandler;
             uwr.SetRequestHeader("range", $"bytes={downloadHandler.CurrentLength}-");
-            uwr.timeout = 10;
             yield return uwr.SendWebRequest();
             if (uwr.result == UnityWebRequest.Result.Success)
             {
@@ -615,7 +614,6 @@ public class HotfixResourceManager : MonoBehaviour
         {
             uwr.downloadHandler = new DownloadHandlerBuffer();
             uwr.disposeDownloadHandlerOnDispose = true;
-            uwr.timeout = 10;
             yield return uwr.SendWebRequest();
             if (uwr.result == UnityWebRequest.Result.Success)
             {
