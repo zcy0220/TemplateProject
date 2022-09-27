@@ -85,7 +85,7 @@ namespace Editor.BuildProjectPacker
             }
             if (GUILayout.Button("Build", GUILayout.Height(20)))
             {
-                BuildAssetBundle();
+                BuildAssetBundle(true);
             }
             GUILayout.EndHorizontal();
 
@@ -133,7 +133,7 @@ namespace Editor.BuildProjectPacker
         /// <summary>
         /// 构建AssetBundles
         /// </summary>
-        private void BuildAssetBundle()
+        private void BuildAssetBundle(bool isOpenURL = false)
         {
             switch(_assetBundleType)
             {
@@ -147,6 +147,12 @@ namespace Editor.BuildProjectPacker
                     AssetBundlePacker.BuildResourceAssetBundles(_target);
                     break;
             }
+#if UNITY_EDITOR
+            if (isOpenURL)
+            {
+                Application.OpenURL($"file:///{BuildProjectConfig.ProjectBuildStreamingAssetsPath}");
+            }
+#endif
         }
 
         /// <summary>

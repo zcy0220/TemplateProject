@@ -144,6 +144,7 @@ public class HotfixResourceManager : MonoBehaviour
     private Dictionary<string, AssetBundleResourceInfo> _assetBundleInfoDict = new Dictionary<string, AssetBundleResourceInfo>();
     /// <summary>
     /// 当覆盖安装包时，StreamingAssets要比PresistentData新
+    /// 热更时直接删除PresistentData的旧资源的话就不用设置
     /// </summary>
     public bool _isStreamingAssetsVersionNew = false;
     ////=============================================================
@@ -340,7 +341,9 @@ public class HotfixResourceManager : MonoBehaviour
                     var sLocalVersion = long.Parse(streamingAssetsVersionConfig.Version);
                     if (sLocalVersion > pLocalVersion)
                     {
-                        _isStreamingAssetsVersionNew = true;
+                        //_isStreamingAssetsVersionNew = true;
+                        var presistentDataAssetAssetBundlesFolder = GetPresistentDataFilePath(AssetBundlesFolder);
+                        if (Directory.Exists(presistentDataAssetAssetBundlesFolder)) Directory.Delete(presistentDataAssetAssetBundlesFolder, true);
                         _localAssetBundleVersionConfig = streamingAssetsVersionConfig;
                     }
                 }
@@ -624,7 +627,7 @@ public class HotfixResourceManager : MonoBehaviour
                 var text = JsonUtility.ToJson(_serverAssetBundleVersionConfig);
                 File.WriteAllText(versionConfigPath, text);
 
-                _isStreamingAssetsVersionNew = false;
+                //_isStreamingAssetsVersionNew = false;
                 SetProgress(_totalDownloadSize, _totalDownloadSize);
                 yield return null;
                 _status = EHotfixResourceStatus.EnterGame;

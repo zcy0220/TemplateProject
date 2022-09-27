@@ -70,7 +70,7 @@ namespace Editor.BuildProjectPacker
             _forcePackData.Foldout = false;
             _forcePackData.IndentLevel = 0;
             _forcePackData.AssetPath = BuildProjectConfig.PackRootPath;
-            _forcePackData.Toggle = _forcePackAssetDataList.Contains(configPath);
+            _forcePackData.Toggle = _forcePackAssetDataList.Contains(_forcePackData.AssetPath);
             //_packagesData.IsFolder = true;
             LoadDirectories(_forcePackData);
         }
@@ -106,7 +106,7 @@ namespace Editor.BuildProjectPacker
                 var child = new ForcePackAssetInfo();
                 child.IndentLevel = data.IndentLevel + 1;
                 child.AssetPath = dirPath.Replace("\\", "/");
-                child.Toggle = _forcePackAssetDataList.Contains(dirPath);
+                child.Toggle = _forcePackAssetDataList.Contains(child.AssetPath);
                 data.Children.Add(child);
                 data.Foldout = true;
                 if (LoadDirectories(child) || child.Toggle)

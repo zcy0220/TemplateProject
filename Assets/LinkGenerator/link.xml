@@ -9,6 +9,7 @@
     <type fullname="GameBaseFramework.Event.EventManager" preserve="all" />
   </assembly>
   <assembly fullname="GameUnityFramework">
+    <type fullname="GameUnityFramework.Resource.ResourcePathHelper" preserve="all" />
     <type fullname="GameUnityFramework.Resource.UnityObjectManager" preserve="all" />
   </assembly>
   <assembly fullname="HybridCLR.Runtime">
@@ -49,6 +50,7 @@
     <type fullname="UnityEngine.Object" preserve="all" />
     <type fullname="UnityEngine.Resources" preserve="all" />
     <type fullname="UnityEngine.TextAsset" preserve="all" />
+    <type fullname="UnityEngine.Time" preserve="all" />
     <type fullname="UnityEngine.Transform" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.UI">
