@@ -283,6 +283,9 @@ public class HotfixResourceManager : MonoBehaviour
             var path = GetPresistentDataFilePath(filePath);
             if (File.Exists(path))
             {
+#if !UNITY_EDITOR
+                if (!path.Contains("://")) path = "file://" + path;
+#endif
                 return path;
             }
         }
@@ -313,17 +316,11 @@ public class HotfixResourceManager : MonoBehaviour
     private IEnumerator InitLocalAssetBundleVersionConfig()
     {
         var presistentDataConfigPath = GetPresistentDataFilePath(AssetBundleVersionConfigFile);
-        using (var uwr = new UnityWebRequest(presistentDataConfigPath))
+        if (File.Exists(presistentDataConfigPath))
         {
-            uwr.downloadHandler = new DownloadHandlerBuffer();
-            uwr.disposeDownloadHandlerOnDispose = true;
-            yield return uwr.SendWebRequest();
-            if (uwr.result == UnityWebRequest.Result.Success)
-            {
-                _localAssetBundleVersionConfig = JsonUtility.FromJson<AssetBundleVersionConfig>(uwr.downloadHandler.text);
-                Debug.Log($"presistentdata assetbundle versionconfig:{_localAssetBundleVersionConfig.Version}");
-            }
-            uwr.Dispose();
+            var text = File.ReadAllText(presistentDataConfigPath);
+            _localAssetBundleVersionConfig = JsonUtility.FromJson<AssetBundleVersionConfig>(text);
+            Debug.Log($"presistentdata assetbundle versionconfig:{_localAssetBundleVersionConfig.Version}");
         }
 
         var streamingAssetsConfigPath = GetStreamingAssetsFilePath(AssetBundleVersionConfigFile);
@@ -597,7 +594,7 @@ public class HotfixResourceManager : MonoBehaviour
                 _needDownloadQueue.Enqueue(assetBundleName);
                 Debug.LogError($"assetbundle name:{assetBundleName} {uwr.error}");
             }
-            uwr.downloadHandler.Dispose();
+            downloadHandler.Close();
             uwr.Dispose();
             _loadingAssetBundleCount--;
         }
@@ -631,6 +628,8 @@ public class HotfixResourceManager : MonoBehaviour
                 _status = EHotfixResourceStatus.EnterGame;
                 OnFinished();
             }
+            downloadHandler.Close();
+            uwr.Dispose();
         }
     }
 

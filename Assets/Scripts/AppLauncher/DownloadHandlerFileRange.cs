@@ -34,6 +34,7 @@ public class DownloadHandlerFileRange : DownloadHandlerScript
     private long _contentLength = 0;
     /// <summary>
     /// UnityWebRequest
+    /// ReceiveData里面有个bug要用到
     /// </summary>
     private UnityWebRequest _unityWebRequest;
     //======================================================================================
@@ -65,7 +66,7 @@ public class DownloadHandlerFileRange : DownloadHandlerScript
     /// <summary>
     /// 关闭文件流
     /// </summary>
-    private void Close()
+    public void Close()
     {
         if (_fileStream != null)
         {
