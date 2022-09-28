@@ -567,7 +567,7 @@ public class HotfixResourceManager : MonoBehaviour
         {
             var assetBundlePath = PathCombine(AssetBundlesFolder, assetBundleName);
             var filePath = GetPresistentDataFilePath(assetBundlePath);
-            var downloadHandler = new DownloadHandlerFileRange(filePath);
+            var downloadHandler = new DownloadHandlerFileRange(filePath, uwr);
             uwr.downloadHandler = downloadHandler;
             uwr.timeout = 10;
             uwr.SetRequestHeader("range", $"bytes={downloadHandler.CurrentLength}-");
@@ -615,7 +615,7 @@ public class HotfixResourceManager : MonoBehaviour
         using (var uwr = UnityWebRequest.Get(url))
         {
             var filePath = GetPresistentDataFilePath(assetBundlePath);
-            var downloadHandler = new DownloadHandlerFileRange(filePath);
+            var downloadHandler = new DownloadHandlerFileRange(filePath, uwr);
             uwr.downloadHandler = downloadHandler;
             uwr.SetRequestHeader("range", $"bytes={downloadHandler.CurrentLength}-");
             yield return uwr.SendWebRequest();
