@@ -32,7 +32,10 @@ public class DownloadHandlerFileRange : DownloadHandlerScript
     /// 本次需要下载的数据长度
     /// </summary>
     private long _contentLength = 0;
-
+    /// <summary>
+    /// UnityWebRequest
+    /// </summary>
+    private UnityWebRequest _unityWebRequest;
     //======================================================================================
     public long CurrentLength { get { return _currentLength; } }
     //======================================================================================
@@ -41,13 +44,22 @@ public class DownloadHandlerFileRange : DownloadHandlerScript
     /// 构造初始化
     /// </summary>
     /// <param name="filePath">文件保存路径:下载到tmp文件，完成时重命名</param>
-    public DownloadHandlerFileRange(string saveFilePath) : base(new byte[1024 * 1024])
+    public DownloadHandlerFileRange(string saveFilePath, UnityWebRequest unityWebRequest) : base(new byte[1024 * 1024])
     {
         _saveFilePath = saveFilePath;
         _tempFilePath = $"{saveFilePath}.temp";
         _fileStream = new FileStream(_tempFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
         _currentLength = _fileStream.Length;
         _fileStream.Position = _currentLength;
+        _unityWebRequest = unityWebRequest;
+    }
+
+    /// <summary>
+    /// 清理资源,该方法没办法重写,只能隐藏,如果想要强制中止下载,并清理资源(UnityWebRequest.Dispose()),该方法并不会被调用,这让人很苦恼
+    /// </summary>
+    public new void Dispose()
+    {
+        Close();
     }
 
     /// <summary>
@@ -81,7 +93,7 @@ public class DownloadHandlerFileRange : DownloadHandlerScript
     /// <returns></returns>
     protected override bool ReceiveData(byte[] data, int dataLength)
     {
-        if (_contentLength <= 0 || data == null || dataLength == 0)
+        if (data == null || dataLength == 0 || _unityWebRequest.responseCode > 400)
         {
             return false;
         }
@@ -98,6 +110,7 @@ public class DownloadHandlerFileRange : DownloadHandlerScript
     /// </summary>
     protected override void CompleteContent()
     {
+        base.CompleteContent();
         Close();
         
         if (_contentLength <= 0)
@@ -112,5 +125,13 @@ public class DownloadHandlerFileRange : DownloadHandlerScript
         }
 
         File.Move(_tempFilePath, _saveFilePath);
+    }
+
+    /// <summary>
+    /// 析构
+    /// </summary>
+    ~DownloadHandlerFileRange()
+    {
+        Close();
     }
 }

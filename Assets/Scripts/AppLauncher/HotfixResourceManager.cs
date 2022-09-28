@@ -74,6 +74,7 @@ public enum EHotfixResourceStatus
     None,
     StartHotfix,
     EnterGame,
+    UpdateConfig,
     ConfigError,
     DownloadError
 }
@@ -548,6 +549,7 @@ public class HotfixResourceManager : MonoBehaviour
         {
             if (_completeDownloadList == null || _completeDownloadList.Count == _totalDownloadCount)
             {
+                _status = EHotfixResourceStatus.UpdateConfig;
                 StartCoroutine(DownloadFinished());
             }
         }
@@ -567,6 +569,7 @@ public class HotfixResourceManager : MonoBehaviour
             var filePath = GetPresistentDataFilePath(assetBundlePath);
             var downloadHandler = new DownloadHandlerFileRange(filePath);
             uwr.downloadHandler = downloadHandler;
+            uwr.timeout = 10;
             uwr.SetRequestHeader("range", $"bytes={downloadHandler.CurrentLength}-");
             yield return uwr.SendWebRequest();
             if (uwr.result == UnityWebRequest.Result.Success)
@@ -607,24 +610,21 @@ public class HotfixResourceManager : MonoBehaviour
     private IEnumerator DownloadFinished()
     {
         if (_completeDownloadStreamWriter != null) _completeDownloadStreamWriter.Close();
-        File.Delete(GetPresistentDataFilePath(AssetBundleCompleteDownloadFile));
         var assetBundlePath = PathCombine(AssetBundlesFolder, AssetBundlesFolder);
         var url = GetServerAssetURL(assetBundlePath);
-        using (var uwr = new UnityWebRequest(url))
+        using (var uwr = UnityWebRequest.Get(url))
         {
-            uwr.downloadHandler = new DownloadHandlerBuffer();
-            uwr.disposeDownloadHandlerOnDispose = true;
+            var filePath = GetPresistentDataFilePath(assetBundlePath);
+            var downloadHandler = new DownloadHandlerFileRange(filePath);
+            uwr.downloadHandler = downloadHandler;
+            uwr.SetRequestHeader("range", $"bytes={downloadHandler.CurrentLength}-");
             yield return uwr.SendWebRequest();
             if (uwr.result == UnityWebRequest.Result.Success)
             {
-                var localAssetBundlePath = GetPresistentDataFilePath(assetBundlePath);
-                File.WriteAllBytes(localAssetBundlePath, uwr.downloadHandler.data);
-                yield return null;
-
                 var versionConfigPath = GetPresistentDataFilePath(AssetBundleVersionConfigFile);
                 var text = JsonUtility.ToJson(_serverAssetBundleVersionConfig);
                 File.WriteAllText(versionConfigPath, text);
-
+                File.Delete(GetPresistentDataFilePath(AssetBundleCompleteDownloadFile));
                 //_isStreamingAssetsVersionNew = false;
                 SetProgress(_totalDownloadSize, _totalDownloadSize);
                 yield return null;
