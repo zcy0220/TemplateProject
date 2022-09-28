@@ -193,12 +193,19 @@ namespace Editor.BuildProjectPacker
 
             Debug.Log("build apk ==> 第1次打包(为了生成补充AOT元数据dll)");
             BuildPipeline.BuildPlayer(buildPlayerOptions);
-            BuildChannelConfig();
-            BuildAssetBundle();
             FileUtil.DeleteFileOrDirectory(Application.streamingAssetsPath + ".meta");
             FileUtil.DeleteFileOrDirectory(Application.streamingAssetsPath);
-            if (_assetBundleType != EBuildAssetBundle.NoAssetBundle)
+            BuildChannelConfig();
+            if (_assetBundleType == EBuildAssetBundle.NoAssetBundle)
             {
+                var sourceChannelConfigPath = Path.Combine(BuildProjectConfig.ProjectBuildStreamingAssetsPath, AppConfig.LocalChannelConfig);
+                var destChannelConfigPath = Path.Combine(Application.streamingAssetsPath, AppConfig.LocalChannelConfig);
+                Directory.CreateDirectory(Application.streamingAssetsPath);
+                FileUtil.CopyFileOrDirectory(sourceChannelConfigPath, destChannelConfigPath);
+            }
+            else
+            {
+                BuildAssetBundle();
                 FileUtil.CopyFileOrDirectory(BuildProjectConfig.ProjectBuildStreamingAssetsPath, Application.streamingAssetsPath);
             }
             Debug.Log("build apk ==> 第2次打包");
@@ -216,9 +223,6 @@ namespace Editor.BuildProjectPacker
             FileUtil.DeleteFileOrDirectory(Application.streamingAssetsPath + ".meta");
             FileUtil.DeleteFileOrDirectory(Application.streamingAssetsPath);
             AssetDatabase.Refresh();
-#if UNITY_EDITOR
-            Application.OpenURL($"file:///{outputPath}");
-#endif
         }
     }
 }

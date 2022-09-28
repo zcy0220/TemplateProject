@@ -22,6 +22,7 @@ namespace GameMain
             ResourcePathHelper.ResourcePathPrefix = "Assets/ArtPack/Pack";
             ResourcePathHelper.AssetBundlesFolder = "assetbundles";
             ResourcePathHelper.PackConfigPath = "Assets/ArtPack/Pack/PackConfig.txt";
+            GameObject.DontDestroyOnLoad(gameObject);
         }
 
         /// <summary>
