@@ -49,9 +49,11 @@ public class DownloadHandlerFileRange : DownloadHandlerScript
     {
         _saveFilePath = saveFilePath;
         _tempFilePath = $"{saveFilePath}.temp";
-        _fileStream = new FileStream(_tempFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-        _currentLength = _fileStream.Length;
-        _fileStream.Position = _currentLength;
+        _fileStream = new FileStream(_tempFilePath, FileMode.Append, FileAccess.Write);
+        if (File.Exists(_tempFilePath))
+        {
+            _currentLength = new FileInfo(_tempFilePath).Length;
+        }
         _unityWebRequest = unityWebRequest;
     }
 

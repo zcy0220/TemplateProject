@@ -569,7 +569,8 @@ public class HotfixResourceManager : MonoBehaviour
             uwr.timeout = 10;
             uwr.SetRequestHeader("range", $"bytes={downloadHandler.CurrentLength}-");
             yield return uwr.SendWebRequest();
-            if (uwr.result == UnityWebRequest.Result.Success)
+            //本地文件的Size已经等于文件总Length这个时候就会遇到416，Range参数不对, 这个时候不算错误
+            if (uwr.result == UnityWebRequest.Result.Success || uwr.responseCode == 416)
             {
                 if (_completeDownloadStreamWriter == null)
                 {
@@ -616,7 +617,7 @@ public class HotfixResourceManager : MonoBehaviour
             uwr.downloadHandler = downloadHandler;
             uwr.SetRequestHeader("range", $"bytes={downloadHandler.CurrentLength}-");
             yield return uwr.SendWebRequest();
-            if (uwr.result == UnityWebRequest.Result.Success)
+            if (uwr.result == UnityWebRequest.Result.Success || uwr.responseCode == 416)
             {
                 var versionConfigPath = GetPresistentDataFilePath(AssetBundleVersionConfigFile);
                 var text = JsonUtility.ToJson(_serverAssetBundleVersionConfig);
