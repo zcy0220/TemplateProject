@@ -8,11 +8,6 @@ using UnityEngine;
 public class AppLauncher : MonoBehaviour
 {
     /// <summary>
-    /// 存一份脚本AssetBundle供外部使用
-    /// </summary>
-    public static AssetBundle DllAssetBundle;
-
-    /// <summary>
     /// 初始化
     /// </summary>
     private void Awake()

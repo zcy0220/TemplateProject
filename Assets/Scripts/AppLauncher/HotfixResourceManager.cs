@@ -150,7 +150,7 @@ public class HotfixResourceManager : MonoBehaviour
     public bool _isStreamingAssetsVersionNew = false;
     ////=============================================================
     /// <summary>
-    /// 状态回调
+    /// 热更结束进入游戏回调
     /// </summary>
     public Action<AssetBundle>  OnEnterGame { get; set; }
     ////=============================================================
@@ -607,7 +607,11 @@ public class HotfixResourceManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator DownloadFinished()
     {
-        if (_completeDownloadStreamWriter != null) _completeDownloadStreamWriter.Close();
+        if (_completeDownloadStreamWriter != null)
+        {
+            _completeDownloadStreamWriter.Close();
+            _completeDownloadStreamWriter = null;
+        }
         var assetBundlePath = PathCombine(AssetBundlesFolder, AssetBundlesFolder);
         var url = GetServerAssetURL(assetBundlePath);
         using (var uwr = UnityWebRequest.Get(url))
@@ -647,5 +651,17 @@ public class HotfixResourceManager : MonoBehaviour
             OnEnterGame?.Invoke(dllAssetBundle);
         }
         GameObject.Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// 销毁
+    /// </summary>
+    private void OnDestroy()
+    {
+        if (_completeDownloadStreamWriter != null)
+        {
+            _completeDownloadStreamWriter.Close();
+            _completeDownloadStreamWriter = null;
+        }
     }
 }

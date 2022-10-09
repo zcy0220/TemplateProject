@@ -209,6 +209,7 @@ namespace Editor.BuildProjectPacker
                 FileUtil.CopyFileOrDirectory(BuildProjectConfig.ProjectBuildStreamingAssetsPath, Application.streamingAssetsPath);
             }
             Debug.Log("build apk ==> 第2次打包");
+            AssetDatabase.Refresh();
             var report = BuildPipeline.BuildPlayer(buildPlayerOptions);
             if (report.summary.result == BuildResult.Succeeded)
             {

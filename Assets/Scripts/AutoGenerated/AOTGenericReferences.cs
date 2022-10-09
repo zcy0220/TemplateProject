@@ -13,6 +13,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 
 	public void RefMethods()
 	{
+		// System.Object GameUnityFramework.Resource.UnityObjectManager::SyncLoad<System.Object>(System.String)
 		// System.Object UnityEngine.Component::GetComponent<System.Object>()
 		// System.Object UnityEngine.Object::Instantiate<System.Object>(System.Object,UnityEngine.Transform)
 	}

@@ -103,7 +103,7 @@ namespace Editor.BuildProjectPacker
             CompileDllCommand.CompileDll(target);
 
             var assetList = new List<string>();
-            var hotfixDllSrcDir = SettingsUtil.GetHotFixDllsOutputDirByTarget(target);
+            var hotfixDllSrcDir = SettingsUtil.GetHotUpdateDllsOutputDirByTarget(target);
             foreach (var dll in SettingsUtil.HotUpdateAssemblyFiles)
             {
                 var dllPath = $"{hotfixDllSrcDir}/{dll}";
