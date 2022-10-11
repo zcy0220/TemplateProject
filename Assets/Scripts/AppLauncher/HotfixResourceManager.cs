@@ -340,8 +340,12 @@ public class HotfixResourceManager : MonoBehaviour
                     if (sLocalVersion > pLocalVersion)
                     {
                         //_isStreamingAssetsVersionNew = true;
-                        var presistentDataAssetAssetBundlesFolder = GetPresistentDataFilePath(AssetBundlesFolder);
-                        if (Directory.Exists(presistentDataAssetAssetBundlesFolder)) Directory.Delete(presistentDataAssetAssetBundlesFolder, true);
+                        if (pLocalVersion != 0)
+                        {
+                            var presistentDataAssetAssetBundlesFolder = GetPresistentDataFilePath(AssetBundlesFolder);
+                            if (Directory.Exists(presistentDataAssetAssetBundlesFolder)) Directory.Delete(presistentDataAssetAssetBundlesFolder, true);
+                            if (File.Exists(presistentDataConfigPath)) File.Delete(presistentDataConfigPath);
+                        }
                         _localAssetBundleVersionConfig = streamingAssetsVersionConfig;
                     }
                 }

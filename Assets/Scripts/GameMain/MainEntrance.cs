@@ -30,11 +30,11 @@ namespace GameMain
         /// </summary>
         private void Start()
         {
-            Debug.Log("main entrance ==> start game 123");
+            Debug.Log("main entrance ==> start game");
             G.UnityObjectManager.SyncGameObjectInstantiate("Prefabs/Base/MainCamera.prefab");
-            var data = G.UnityObjectManager.SyncLoad<TestScriptableObject>("Datas/TestScriptableObject.asset");
-            //var data = Resources.Load<TestScriptableObject>("TestScriptableObject");
-            Debug.Log(data.a);
+            G.UnityObjectManager.AsyncGameObjectInstantiate("Tests/Test3.prefab", (obj) => { Debug.Log("123123"); });
+            G.UnityObjectManager.AsyncGameObjectInstantiate("Tests/Test4.prefab", (obj) => { Debug.Log("456456"); });
+            Debug.Log("main entrance ==> start game 123");
         }
 
         /// <summary>

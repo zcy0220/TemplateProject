@@ -23,6 +23,3 @@ MonoBehaviour:
   maxGenericReferenceIteration: 4
   ReversePInvokeWrapperCount: 10
   maxMethodBridgeGenericIteration: 4
-  hotUpdateDllOutputDir: HotUpdateDlls
-  hybridCLRDataDir: HybridCLRData
-  strippedAssemblyDir: AssembliesPostIl2CppStrip
