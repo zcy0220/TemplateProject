@@ -1,6 +1,3 @@
-[submodule "FrameSyncServer"]
-	path = FrameSyncServer
-	url = https://github.com/zcy0220/FrameSyncServer.git
 [submodule "Assets/Scripts/Frameworks/GameBaseFramework"]
 	path = Assets/Scripts/Frameworks/GameBaseFramework
 	url = https://github.com/zcy0220/GameBaseFramework.git
