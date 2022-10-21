@@ -1,0 +1,20 @@
+{
+    "name": "GameEntrance",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ce2d830563c6df641aa2c11e747304a2",
+        "GUID:965f06070262d4a438c0d499a58bf22b",
+        "GUID:7bd5029f085ddf5429f99f673a54eb72",
+        "GUID:fa790ca7ed4c57148a4662e4c922f840",
+        "GUID:ef9a6bd66150f1040bd94604ca853a02"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -34,18 +34,22 @@ public class AppLauncher : MonoBehaviour
     private void EnterGame(AssetBundle dllAssetBundle)
     {
         Debug.Log("app launcher ==> enter game");
-        var gameMainDll = dllAssetBundle.LoadAsset<TextAsset>("GameMain.dll.bytes");
-        var gameMainAssembly = System.Reflection.Assembly.Load(gameMainDll.bytes);
-        var gameAssemblyDll = dllAssetBundle.LoadAsset<TextAsset>("Assembly-CSharp.dll.bytes");
-        var gameAssembly = System.Reflection.Assembly.Load(gameAssemblyDll.bytes);
+        var gameLogicsDll = dllAssetBundle.LoadAsset<TextAsset>("GameLogics.dll.bytes");
+        System.Reflection.Assembly.Load(gameLogicsDll.bytes);
+        var gameGraphicsDll = dllAssetBundle.LoadAsset<TextAsset>("GameGraphics.dll.bytes");
+        System.Reflection.Assembly.Load(gameGraphicsDll.bytes);
+        var gameEntranceDll = dllAssetBundle.LoadAsset<TextAsset>("GameEntrance.dll.bytes");
+        var gameEntranceAssembly = System.Reflection.Assembly.Load(gameEntranceDll.bytes);
+        var assemblyCSharpDll = dllAssetBundle.LoadAsset<TextAsset>("Assembly-CSharp.dll.bytes");
+        System.Reflection.Assembly.Load(assemblyCSharpDll.bytes);
 #if !UNITY_EDITOR
         LoadMetadataForAOTAssembly(dllAssetBundle);
 #endif
-        if (gameMainAssembly != null)
+        if (gameEntranceAssembly != null)
         {
-            var mainEntranceType = gameMainAssembly.GetType("GameMain.MainEntrance");
-            var mainEntrance = new GameObject("MainEntrance");
-            mainEntrance.AddComponent(mainEntranceType);
+            var gameEntranceType = gameEntranceAssembly.GetType("GameEntrance");
+            var gameEntrance = new GameObject("GameEntrance");
+            gameEntrance.AddComponent(gameEntranceType);
         }
     }
 

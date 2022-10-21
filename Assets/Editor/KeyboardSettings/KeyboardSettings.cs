@@ -12,7 +12,7 @@ namespace Editor.KeyboardSettings
         [MenuItem("Tools/KeyboardSettings/开始游戏 _F5")]
         private static void StartGame()
         {
-            var launcherScene = "Assets/Scenes/GameLauncherScene.unity";
+            var launcherScene = "Assets/Scenes/EditorLauncherScene.unity";
             if (!EditorApplication.isPlaying)
             {
                 EditorSceneManager.OpenScene(launcherScene);

@@ -16,6 +16,8 @@ MonoBehaviour:
   cloneFromGitee: 1
   hotUpdateAssemblyDefinitions:
   - {fileID: 5897886265953266890, guid: 3dcab30322007cf4ca53370d83746e91, type: 3}
+  - {fileID: 5897886265953266890, guid: 7bd5029f085ddf5429f99f673a54eb72, type: 3}
+  - {fileID: 5897886265953266890, guid: fa790ca7ed4c57148a4662e4c922f840, type: 3}
   hotUpdateAssemblies:
   - Assembly-CSharp
   outputLinkFile: LinkGenerator/link.xml

@@ -4,6 +4,3 @@
 [submodule "Assets/Scripts/Frameworks/GameUnityFramework"]
 	path = Assets/Scripts/Frameworks/GameUnityFramework
 	url = https://github.com/zcy0220/GameUnityFramework.git
-[submodule "Assets/Scripts/Frameworks/GameBattleFramework"]
-	path = Assets/Scripts/Frameworks/GameBattleFramework
-	url = https://github.com/zcy0220/GameBattleFramework.git
