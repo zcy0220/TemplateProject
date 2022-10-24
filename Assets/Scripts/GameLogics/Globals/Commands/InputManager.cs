@@ -8,5 +8,6 @@ namespace GameLogics
 {
     internal class InputManager : CommandManager
     {
+       
     }
 }

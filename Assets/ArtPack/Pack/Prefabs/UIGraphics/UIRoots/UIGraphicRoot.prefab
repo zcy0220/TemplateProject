@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3870039531173426018}
   m_Layer: 0
-  m_Name: UIRoot
+  m_Name: UIGraphicRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 1999571088684133914}
   - component: {fileID: 3916822287173147485}
   m_Layer: 5
-  m_Name: 2DUIRoot
+  m_Name: 2DUIGraphicRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 3359794736324775158}
   - component: {fileID: 987400988657603889}
   m_Layer: 5
-  m_Name: 3DUIRoot
+  m_Name: 3DUIGraphicRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
