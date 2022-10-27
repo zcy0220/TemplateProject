@@ -11,20 +11,6 @@ namespace GameMain
 {
     public class G
     {
-        #region UIManager
-        private static UIManager _uiManager;
-        public static UIManager UIManager
-        {
-            get
-            {
-                if (_uiManager == null)
-                {
-                    _uiManager = new UIManager();
-                }
-                return _uiManager;
-            }
-        }
-        #endregion
         #region EventManager
         private static EventManager _eventManager;
         public static EventManager EventManager

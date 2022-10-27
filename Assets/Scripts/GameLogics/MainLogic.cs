@@ -33,7 +33,7 @@ namespace GameLogics
         /// <summary>
         /// 绑定渲染
         /// </summary>
-        public static void BindGraphics(CommandManager commandManager)
+        public static void Bind(CommandManager commandManager)
         {
             _outputManager = commandManager;
         }

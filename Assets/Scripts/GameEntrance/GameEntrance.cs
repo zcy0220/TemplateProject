@@ -43,9 +43,11 @@ public class GameEntrance : MonoBehaviour
     private void Start()
     {
         Debuger.Log("game entrance ==> start");
+        GameGraphics.MainGraphic.Init();
         //逻辑层的输出即为渲染层的输入
         //渲染层的UI、键盘摇杆等输出，调用逻辑层的输入
-        GameLogics.MainLogic.BindGraphics(GameGraphics.MainGraphic.InputManager);
+        var output = GameGraphics.MainGraphic.InputManager;
+        GameLogics.MainLogic.Bind(output);
         GameLogics.MainLogic.StartGame();
     }
 

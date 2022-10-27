@@ -9,14 +9,16 @@ namespace GameGraphics
 {
     public class MainGraphic
     {
+        #region 全局模块
         /// <summary>
         /// 输入模块
         /// </summary>
-        public static InputManager InputManager { get; private set; } = new InputManager();
+        public static InputManager InputManager { get; private set; }
         /// <summary>
         /// 资源加载模块
         /// </summary>
-        internal static UnityObjectManager UnityObjectManager { get; private set; } = new UnityObjectManager();
+        public static UnityObjectManager UnityObjectManager { get; private set; }
+        #endregion
 
         /// <summary>
         /// 输入
@@ -34,6 +36,15 @@ namespace GameGraphics
         public static void Update()
         {
             InputManager.Update();
+        }
+
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        public static void Init()
+        {
+            UnityObjectManager = new UnityObjectManager();
+            InputManager = new InputManager();
         }
     }
 }
