@@ -23,6 +23,10 @@ namespace GameLogics
         /// <summary>
         /// 界面名
         /// </summary>
-        public string UIViewName;
+        public string Name;
+        /// <summary>
+        /// 参数数据
+        /// </summary>
+        public object Data;
     }
 }

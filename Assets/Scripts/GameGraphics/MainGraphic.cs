@@ -3,6 +3,7 @@
  */
 
 using GameBaseFramework.Patterns;
+using GameUnityFramework.Resource;
 
 namespace GameGraphics
 {
@@ -12,6 +13,10 @@ namespace GameGraphics
         /// 输入模块
         /// </summary>
         public static InputManager InputManager { get; private set; } = new InputManager();
+        /// <summary>
+        /// 资源加载模块
+        /// </summary>
+        internal static UnityObjectManager UnityObjectManager { get; private set; } = new UnityObjectManager();
 
         /// <summary>
         /// 输入

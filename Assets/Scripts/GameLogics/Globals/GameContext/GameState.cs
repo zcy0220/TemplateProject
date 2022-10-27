@@ -13,7 +13,7 @@ namespace GameLogics
         /// </summary>
         public override void Enter()
         {
-            MainLogic.Output(new UIViewOpenCommand() { UIViewName = "sasf" });
+            MainLogic.Output(new UIViewOpenCommand() { Name = "UIViewStartGame" });
         }
     }
 
