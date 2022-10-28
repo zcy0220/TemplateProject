@@ -43,5 +43,15 @@ namespace GameMain.Modules
         /// 被依赖的列表
         /// </summary>
         public List<RedPointData> BeDepends = new List<RedPointData>();
+
+        public void Init()
+        {
+            var obj = new DataValue<int>(0);
+            obj.Set(10);
+            obj += (value) =>
+            {
+                // value = 10
+            };
+        }
     }
 }

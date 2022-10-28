@@ -65,7 +65,7 @@ namespace GameTest
         /// </summary>
         public void OnButtonMailSystem()
         {
-            G.DataModuleManager.TestAddRedPointNum(ERedPointModule.MailSystem);
+            //G.DataModuleManager.TestAddRedPointNum(ERedPointModule.MailSystem);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace GameTest
         /// </summary>
         public void OnButtonMailFriend()
         {
-            G.DataModuleManager.TestAddRedPointNum(ERedPointModule.MailFriend);
+            //G.DataModuleManager.TestAddRedPointNum(ERedPointModule.MailFriend);
         }
     }
 }

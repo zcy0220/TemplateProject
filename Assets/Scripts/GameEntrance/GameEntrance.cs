@@ -3,7 +3,7 @@
  */
 
 using UnityEngine;
-using GameUnityFramework.Log;
+using GameBaseFramework.Base;
 using GameUnityFramework.Resource;
 
 public class GameEntrance : MonoBehaviour
@@ -23,8 +23,8 @@ public class GameEntrance : MonoBehaviour
     /// </summary>
     private void ConfigGameLogics()
     {
-        GameLogics.Debuger.EnableLog = true;
-        GameLogics.Debuger.LogCallback =  Debuger.Log;
+        Debuger.EnableLog = true;
+        Debuger.Init(new UnityDebugConsole());
     }
 
     /// <summary>

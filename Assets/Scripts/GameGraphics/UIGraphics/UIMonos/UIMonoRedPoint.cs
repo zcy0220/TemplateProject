@@ -4,17 +4,27 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using GameMain.Modules;
 using GameBaseFramework.Base;
 
-namespace GameMain.Views.UI
+namespace GameGraphics
 {
-    public class UIRedPointMono : MonoBehaviour
+    /// <summary>
+    /// 红点类型
+    /// </summary>
+    public enum ERedPointType
     {
         /// <summary>
-        /// 该红点关注的模块
+        /// 单纯的是否显示红点
         /// </summary>
-        public ERedPointModule Module;
+        BoolRedPoint,
+        /// <summary>
+        /// 显示数字型红点
+        /// </summary>
+        NumRedPoint
+    }
+
+    public class UIMonoRedPoint : MonoBehaviour
+    {
         /// <summary>
         /// 红点类型
         /// </summary>
@@ -33,7 +43,7 @@ namespace GameMain.Views.UI
         /// </summary>
         private void Awake()
         {
-            _redPoint = G.DataModuleManager.GetRedPointNum(Module);
+            //_redPoint = G.DataModuleManager.GetRedPointNum(Module);
             _redPoint += OnRedPointNumChange;
             _textNum = transform.GetChild(0).GetComponent<Text>();
             OnRedPointNumChange(_redPoint.Get());

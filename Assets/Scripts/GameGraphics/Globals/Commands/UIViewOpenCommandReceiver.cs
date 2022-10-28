@@ -4,7 +4,7 @@
 
 using System;
 using UnityEngine;
-using GameUnityFramework.Log;
+using GameBaseFramework.Base;
 using GameBaseFramework.Patterns;
 using System.Collections.Generic;
 
