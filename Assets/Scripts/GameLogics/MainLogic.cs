@@ -2,6 +2,7 @@
  * 游戏逻辑入口
  */
 
+using GameBaseFramework.Base;
 using GameBaseFramework.Patterns;
 
 namespace GameLogics
@@ -27,6 +28,7 @@ namespace GameLogics
         public static void StartGame()
         {
             Debuger.Log("main logic ==> start game");
+
             _gameContext.SetState(new StartGameState());
         }
 

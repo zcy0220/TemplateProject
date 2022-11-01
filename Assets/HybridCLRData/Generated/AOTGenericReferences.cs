@@ -6,7 +6,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 
 	// {{ AOT generic type
 	//GameBaseFramework.Base.DataValue`1<System.Int32>
-	//System.Action`1<System.Object>
 	//System.Action`1<System.Int32>
 	//System.Collections.Generic.Dictionary`2<System.Object,System.Object>
 	//System.Collections.Generic.Dictionary`2<System.Int32,System.Object>

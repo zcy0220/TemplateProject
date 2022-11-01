@@ -2,14 +2,17 @@
 <linker>
   <assembly fullname="GameBaseFramework">
     <type fullname="GameBaseFramework.Base.DataValue`1" preserve="all" />
-    <type fullname="GameBaseFramework.Event.EventManager" preserve="all" />
+    <type fullname="GameBaseFramework.Base.Debuger" preserve="all" />
+    <type fullname="GameBaseFramework.Base.ILogger" preserve="all" />
+    <type fullname="GameBaseFramework.Base.UnityDebugConsole" preserve="all" />
+    <type fullname="GameBaseFramework.Networks.EConnectionType" preserve="all" />
+    <type fullname="GameBaseFramework.Networks.NetManager" preserve="all" />
     <type fullname="GameBaseFramework.Patterns.BaseState" preserve="all" />
     <type fullname="GameBaseFramework.Patterns.Command" preserve="all" />
     <type fullname="GameBaseFramework.Patterns.CommandManager" preserve="all" />
     <type fullname="GameBaseFramework.Patterns.CommandReceiver" preserve="all" />
   </assembly>
   <assembly fullname="GameUnityFramework">
-    <type fullname="GameUnityFramework.Log.Debuger" preserve="all" />
     <type fullname="GameUnityFramework.Resource.ResourcePathHelper" preserve="all" />
     <type fullname="GameUnityFramework.Resource.UnityObjectManager" preserve="all" />
   </assembly>
