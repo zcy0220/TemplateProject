@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace GameGraphics
 {
-	public class UIViewConfig
+	public partial class UIViewConfig
 	{
 		public static Dictionary<string, Type> NameToTypeDict = new Dictionary<string, Type>()
 		{

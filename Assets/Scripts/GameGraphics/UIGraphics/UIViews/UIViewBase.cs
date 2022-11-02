@@ -19,6 +19,10 @@ namespace GameGraphics
         /// </summary>
         public EUIViewState State { get; private set; }
         /// <summary>
+        /// 
+        /// </summary>
+        public GameLogics.EUIViewOpenType OpenType { get; set; }
+        /// <summary>
         /// 预制体实例引用
         /// </summary>
         protected GameObject _root;
@@ -36,7 +40,7 @@ namespace GameGraphics
             _root = MainGraphic.UnityObjectManager.SyncGameObjectInstantiate(GetPrefabPath(), _parent);
             State = EUIViewState.Open;
             BindWidgets();
-            Enter(data);
+            OnEnter(data);
         }
 
         /// <summary>
@@ -45,7 +49,11 @@ namespace GameGraphics
         public void Close()
         {
             State = EUIViewState.Close;
-            Exit();
+            OnExit();
+            if (_root != null)
+            {
+                GameObject.Destroy(_root);
+            }
         }
 
         /// <summary>
@@ -67,11 +75,11 @@ namespace GameGraphics
         /// <summary>
         /// 进入界面
         /// </summary>
-        protected virtual void Enter(object data = null) { }
+        protected virtual void OnEnter(object data = null) { }
         
         /// <summary>
         /// 退出界面
         /// </summary>
-        protected virtual void Exit() { }
+        protected virtual void OnExit() { }
     }
 }

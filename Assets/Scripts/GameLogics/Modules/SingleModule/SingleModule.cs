@@ -1,10 +1,10 @@
 ﻿/**
- * 组队模块
+ * 单人模式
  */
 
 namespace GameLogics.Modules
 {
-    internal class TeamModule
+    internal class SingleModule
     {
     }
 }

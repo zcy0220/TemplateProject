@@ -74,7 +74,7 @@ namespace Editor.UIPrefabCodeGenerate
             sb.Append(LineText("using System.Collections.Generic;\n"));
             sb.Append(LineText($"namespace GameGraphics"));
             sb.Append(LineText("{"));
-            sb.Append(LineText($"public class UIViewConfig", 1));
+            sb.Append(LineText($"public partial class UIViewConfig", 1));
             sb.Append(LineText("{", 1));
             sb.Append(LineText($"public static Dictionary<string, Type> NameToTypeDict = new Dictionary<string, Type>()", 2));
             sb.Append(LineText("{", 2));

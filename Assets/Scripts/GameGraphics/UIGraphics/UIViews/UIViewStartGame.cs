@@ -9,7 +9,7 @@ namespace GameGraphics
 {
     public class UIViewStartGame : UIViewStartGameBase
     {
-        protected override void Enter(object data = null)
+        protected override void OnEnter(object data = null)
         {
             Debuger.Log("UIViewStartGame");
         }
