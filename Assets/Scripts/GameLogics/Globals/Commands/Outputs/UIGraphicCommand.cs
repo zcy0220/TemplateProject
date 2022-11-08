@@ -1,8 +1,7 @@
 ﻿/**
- * UIGraphicCommand
+ * 表现层跟UI相关的指令
  */
 
-using GameBaseFramework.Base;
 using GameBaseFramework.Patterns;
 
 namespace GameLogics

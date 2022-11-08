@@ -12,11 +12,11 @@ namespace GameLogics
         /// <summary>
         /// 输入模块
         /// </summary>
-        private static InputManager _inputManager = new InputManager();
+        private static InputManager _inputManager;
         /// <summary>
         /// 游戏上下文（即主体）
         /// </summary>
-        private static GameContext _gameContext = new GameContext();
+        private static GameContext _gameContext;
         /// <summary>
         /// 输出模块
         /// </summary>
@@ -28,8 +28,10 @@ namespace GameLogics
         public static void StartGame()
         {
             Debuger.Log("main logic ==> start game");
-
-            _gameContext.SetState(new StartGameState());
+            _inputManager = new InputManager();
+            //_gameContext = new GameContext();
+            //_gameContext.SetState(new StartGameState());
+            _inputManager.AddCommand(new LoginCommand());
         }
 
         /// <summary>
@@ -66,7 +68,7 @@ namespace GameLogics
         public static void Update()
         {
             _inputManager.Update();
-            _gameContext.Update();
+            //_gameContext.Update();
         }
     }
 }

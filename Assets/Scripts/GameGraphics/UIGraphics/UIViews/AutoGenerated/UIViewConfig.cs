@@ -12,6 +12,7 @@ namespace GameGraphics
 		public static Dictionary<string, Type> NameToTypeDict = new Dictionary<string, Type>()
 		{
 			{"UIViewStartGame", typeof(UIViewStartGame)},
+			{"UIViewTeam", typeof(UIViewTeam)},
 		};
 	}
 }

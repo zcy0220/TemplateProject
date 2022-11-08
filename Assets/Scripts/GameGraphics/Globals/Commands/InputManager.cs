@@ -11,7 +11,7 @@ namespace GameGraphics
         /// <summary>
         /// UIView打开指令接收器
         /// </summary>
-        private UIViewOpenCommandReceiver _uiViewOpenCommandReceiver = new UIViewOpenCommandReceiver();
+        private UIGraphicsCommandReceiver _uiGraphicsCommandReceiver = new UIGraphicsCommandReceiver();
         /// <summary>
         /// 相机指令接收器
         /// </summary>
@@ -23,7 +23,7 @@ namespace GameGraphics
         /// </summary>
         public InputManager()
         {
-            BindCommandReceiver<GameLogics.UIViewOpenCommand>(_uiViewOpenCommandReceiver);
+            BindCommandReceiver<GameLogics.UIViewOpenCommand>(_uiGraphicsCommandReceiver);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace GameGraphics
             //处理指令
             base.Update();
             _cameraControlCommandReceiver.Update();
-            _uiViewOpenCommandReceiver.Update();
+            _uiGraphicsCommandReceiver.Update();
         }
     }
 }

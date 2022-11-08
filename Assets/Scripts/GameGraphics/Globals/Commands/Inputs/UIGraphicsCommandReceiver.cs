@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace GameGraphics
 {
-    internal class UIViewOpenCommandReceiver : CommandReceiver
+    internal class UIGraphicsCommandReceiver : CommandReceiver
     {
         /// <summary>
         /// 2DUI根节点
@@ -34,12 +34,11 @@ namespace GameGraphics
         private Dictionary<string, UIViewBase> _curUIViews = new Dictionary<string, UIViewBase>();
 
         /// <summary>
-        /// 执行命令
+        /// 构造绑定指令回调
         /// </summary>
-        /// <param name="command"></param>
-        public override void Execute(Command command)
+        public UIGraphicsCommandReceiver()
         {
-            OpenView(command as GameLogics.UIViewOpenCommand);
+            Bind<GameLogics.UIViewOpenCommand>(OpenView);
         }
 
         /// <summary>
@@ -125,7 +124,7 @@ namespace GameGraphics
                 switch (command.ViewOpenType)
                 {
                     case GameLogics.EUIViewOpenType.Replace:
-                        //关闭除永久存在之外的所有UIView，在打开当前界面
+                        //关闭除永久存在之外的所有UIView，再打开当前界面
                         foreach (var item in _curUIViews)
                         {
                             if (item.Value.OpenType != GameLogics.EUIViewOpenType.Forever)

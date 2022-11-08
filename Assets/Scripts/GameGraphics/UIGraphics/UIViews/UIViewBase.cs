@@ -44,6 +44,17 @@ namespace GameGraphics
         }
 
         /// <summary>
+        /// UI直接相互直接打开接口
+        /// </summary>
+        public void Open(string name, GameLogics.EUIViewOpenType openType = GameLogics.EUIViewOpenType.Replace)
+        {
+            var command = new GameLogics.UIViewOpenCommand();
+            command.Name = name;
+            command.ViewOpenType = openType;
+            MainGraphic.Input(command);
+        }
+
+        /// <summary>
         /// 关闭界面
         /// </summary>
         public void Close()

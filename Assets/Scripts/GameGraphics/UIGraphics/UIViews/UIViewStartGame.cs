@@ -9,14 +9,12 @@ namespace GameGraphics
 {
     public class UIViewStartGame : UIViewStartGameBase
     {
-        protected override void OnEnter(object data = null)
+        /// <summary>
+        /// 组队模式
+        /// </summary>
+        protected override void OnButtonTeamModeClick()
         {
-            Debuger.Log("UIViewStartGame");
-        }
-
-        protected override void OnButtonSingleModeClick()
-        {
-            Debuger.Log("单人模式");
+            Open("UIViewTeam", GameLogics.EUIViewOpenType.Overlying);
         }
     }
 }
