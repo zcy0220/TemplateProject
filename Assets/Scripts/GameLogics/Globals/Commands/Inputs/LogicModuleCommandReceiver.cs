@@ -19,16 +19,7 @@ namespace GameLogics
         /// </summary>
         public LogicModuleCommandReceiver()
         {
-            Bind<LoginCommand>(OnLoginCommandCallback);
-        }
-
-        /// <summary>
-        /// 登录指令回调
-        /// </summary>
-        /// <param name="command"></param>
-        public void OnLoginCommandCallback(LoginCommand command)
-        {
-            //_loginModule.Login()
+            Bind<LoginCommand>(_loginModule.Login);
         }
     }
 }

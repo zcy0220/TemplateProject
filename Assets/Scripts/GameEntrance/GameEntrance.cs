@@ -49,6 +49,9 @@ public class GameEntrance : MonoBehaviour
         var output = GameGraphics.MainGraphic.InputManager;
         GameLogics.MainLogic.Bind(output);
         GameLogics.MainLogic.StartGame();
+        var command = new GameLogics.LoginCommand();
+        command.UserId = SystemInfo.deviceUniqueIdentifier;
+        GameLogics.MainLogic.Input(command);
     }
 
     /// <summary>

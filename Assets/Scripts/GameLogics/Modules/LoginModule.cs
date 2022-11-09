@@ -2,24 +2,24 @@
  * 登录模块
  */
 
+using GameLogics.Datas;
+
 namespace GameLogics.Modules
 {
     internal class LoginModule
     {
         /// <summary>
-        /// 登录
+        /// 用户数据
         /// </summary>
-        public void Login()
-        {
-            //模拟登录成功
-            OnLoginSuccess();
-        }
+        private UserData _userData = new UserData();
 
         /// <summary>
-        /// 登录成功回调
+        /// 登录
         /// </summary>
-        public void OnLoginSuccess()
+        public void Login(LoginCommand command)
         {
+            _userData.UserId = command.UserId;
+            MainLogic.Output(new UIViewOpenCommand() { Name = "UIViewStartGame" });
         }
     }
 }

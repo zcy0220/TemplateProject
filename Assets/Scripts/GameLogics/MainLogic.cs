@@ -29,9 +29,8 @@ namespace GameLogics
         {
             Debuger.Log("main logic ==> start game");
             _inputManager = new InputManager();
-            //_gameContext = new GameContext();
-            //_gameContext.SetState(new StartGameState());
-            _inputManager.AddCommand(new LoginCommand());
+            _gameContext = new GameContext();
+            _gameContext.SetState(new StartGameState());
         }
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace GameLogics
         public static void Update()
         {
             _inputManager.Update();
-            //_gameContext.Update();
+            _gameContext.Update();
         }
     }
 }
