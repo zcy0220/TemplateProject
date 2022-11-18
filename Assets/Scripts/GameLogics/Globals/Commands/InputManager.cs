@@ -19,6 +19,7 @@ namespace GameLogics
         public InputManager()
         {
             BindCommandReceiver<LoginCommand>(_logicModuleCommandReceiver);
+            BindCommandReceiver<CreateRoomCommand>(_logicModuleCommandReceiver);
         }
     }
 }

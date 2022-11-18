@@ -108,6 +108,7 @@ namespace GameGraphics
                 rectTr.anchorMax = Vector2.one;
                 rectTr.offsetMin = Vector2.zero;
                 rectTr.offsetMax = Vector2.zero;
+                rectTr.localScale = Vector3.one;
                 node = rectTr;
             }
             return node;

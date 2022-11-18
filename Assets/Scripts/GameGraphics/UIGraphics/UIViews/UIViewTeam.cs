@@ -13,5 +13,13 @@ namespace GameGraphics
         {
             Close();
         }
+
+        /// <summary>
+        /// 创建房间
+        /// </summary>
+        protected override void OnButtonCreateRoomClick()
+        {
+            GameLogics.MainLogic.Input(new GameLogics.CreateRoomCommand());
+        }
     }
 }

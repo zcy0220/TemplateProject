@@ -14,6 +14,15 @@ namespace GameLogics.Modules
         private UserData _userData = new UserData();
 
         /// <summary>
+        /// 获取用户数据
+        /// </summary>
+        /// <returns></returns>
+        public UserData GetUserData()
+        {
+            return _userData;
+        }
+
+        /// <summary>
         /// 登录
         /// </summary>
         public void Login(LoginCommand command)

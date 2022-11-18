@@ -18,7 +18,7 @@ namespace GameLogics
         /// </summary>
         public NetworkCommandReceiver()
         {
-            _netManager = new NetManager(EConnectionType.Kcp);
+            _netManager = new NetManager(EConnectionType.KCP);
         }
     }
 }

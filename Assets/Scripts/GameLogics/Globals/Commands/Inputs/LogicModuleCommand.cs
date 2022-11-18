@@ -19,4 +19,12 @@ namespace GameLogics
         /// </summary>
         public string UserId;
     }
+
+    /// <summary>
+    /// 创建房间指令
+    /// </summary>
+    public class CreateRoomCommand : LogicModuleCommand
+    {
+
+    }
 }
