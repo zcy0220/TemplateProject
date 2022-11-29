@@ -7,7 +7,7 @@ public class AppConfig
     /// <summary>
     /// AssetBundle的密钥
     /// </summary>
-    public const string AssetBundleEncryptkey = "qTuaWg.2MFrC*7zD";
+    public const string AssetBundleEncryptkey = "";
     /// <summary>
     /// 渠道标志的文件(相对于Application.streamingAssetsPath)
     /// </summary>

@@ -18,6 +18,13 @@ namespace Editor.BuildProjectPacker
         NoAssetBundle
     }
 
+
+    public enum EHotfixType
+    {
+        None,
+        HybridCLR
+    }
+
     public class BuildProjectPacker : EditorWindow
     {
         /// <summary>
@@ -29,6 +36,10 @@ namespace Editor.BuildProjectPacker
         /// </summary>
         private static string _channel = "default";
         /// <summary>
+        /// 热更新方式
+        /// </summary>
+        private static EHotfixType _hotfixType = EHotfixType.None;
+        /// <summary>
         /// 当前选中的平台
         /// </summary>
         private static BuildTarget _target = BuildTarget.Android;
@@ -39,7 +50,7 @@ namespace Editor.BuildProjectPacker
         /// <summary>
         /// 构建AssetBundle类型
         /// </summary>
-        private static EBuildAssetBundle _assetBundleType = EBuildAssetBundle.AllAssetBundle;
+        private static EBuildAssetBundle _assetBundleType = EBuildAssetBundle.OnlyResourceAssetBundle;
 
         /// <summary>
         /// 窗口入口
@@ -74,6 +85,7 @@ namespace Editor.BuildProjectPacker
             }
             GUILayout.EndHorizontal();
 
+            _hotfixType = (EHotfixType)EditorGUILayout.EnumPopup("HotfixType", _hotfixType);
             _assetBundleType = (EBuildAssetBundle)EditorGUILayout.EnumPopup("AssetBundleType", _assetBundleType);
 
             //AssetBundle构建相关
@@ -160,7 +172,14 @@ namespace Editor.BuildProjectPacker
         /// </summary>
         private string[] GetBuildScenes()
         {
-            return new string[] { "Assets/Scenes/AppLauncherScene.unity" };
+            if (_hotfixType == EHotfixType.None)
+            {
+                return new string[] { "Assets/Scenes/GameLauncherScene.unity" };
+            }
+            else
+            {
+                return new string[] { "Assets/Scenes/AppLauncherScene.unity" };
+            }
         }
 
         /// <summary>
@@ -174,14 +193,10 @@ namespace Editor.BuildProjectPacker
                 EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
             }
             EditorUserBuildSettings.development = _isDebug;
-
             var apkName = PlayerSettings.productName + "_" + (_isDebug ? "Debug" : "Release") + ".apk";
             var outputPath = $"{BuildProjectConfig.ProjectBuildPath}/Android";
             var location = Path.Combine(outputPath, apkName);
             var buildOptions = BuildOptions.CompressWithLz4;
-
-            PrebuildCommand.GenerateAll();
-
             var buildPlayerOptions = new BuildPlayerOptions()
             {
                 scenes = GetBuildScenes(),
@@ -191,8 +206,13 @@ namespace Editor.BuildProjectPacker
                 targetGroup = BuildTargetGroup.Android,
             };
 
-            Debug.Log("build apk ==> 第1次打包(为了生成补充AOT元数据dll)");
-            BuildPipeline.BuildPlayer(buildPlayerOptions);
+            if (_hotfixType == EHotfixType.HybridCLR)
+            {
+                PrebuildCommand.GenerateAll();
+                Debug.Log("build apk ==> 第1次打包(为了生成补充AOT元数据dll)");
+                BuildPipeline.BuildPlayer(buildPlayerOptions);
+            }
+            
             FileUtil.DeleteFileOrDirectory(Application.streamingAssetsPath + ".meta");
             FileUtil.DeleteFileOrDirectory(Application.streamingAssetsPath);
             BuildChannelConfig();
